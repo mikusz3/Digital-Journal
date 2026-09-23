@@ -211,4 +211,5 @@ async function start() {
     root.innerHTML = `<main class="card fatal"><h1>Your journals need attention</h1><p>${escapeHtml(error.message)}</p><p class="muted">No data has been replaced. Close the app and resolve the issue before trying again.</p></main>`;
   }
 }
-start();
+// Wait for all deferred feature/translation scripts before initializing the app.
+window.addEventListener('DOMContentLoaded', start, { once: true });
