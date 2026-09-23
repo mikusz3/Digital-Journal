@@ -229,7 +229,7 @@ class MainActivity : Activity() {
         val labelView = text(parent, I18n.t(this,label), 13f)
         return Spinner(this).apply {
             id = View.generateViewId(); labelView.labelFor = id; contentDescription = label
-            adapter = ArrayAdapter(this@MainActivity, android.R.layout.simple_spinner_dropdown_item, options.map {I18n.t(this@MainActivity,it)})
+            adapter = appearance.adapter(options)
             setSelection(selected); minimumHeight = dp(48); parent.addView(this); fields[key] = this
         }
     }

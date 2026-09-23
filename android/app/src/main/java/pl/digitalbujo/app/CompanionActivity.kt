@@ -77,7 +77,7 @@ class CompanionActivity : Activity() {
     private fun value(key: String)=fields[key]?.text?.toString() ?: ""
     private fun select(parent: LinearLayout,label: String,options: List<String>,initial: String,change:(String)->Unit):Spinner {
         text(parent,I18n.t(this,label),13f)
-        return Spinner(this).apply { contentDescription=I18n.t(this@CompanionActivity,label);adapter=ArrayAdapter(this@CompanionActivity,android.R.layout.simple_spinner_dropdown_item,options.map {I18n.t(this@CompanionActivity,it)});setSelection(options.indexOf(initial).coerceAtLeast(0));minimumHeight=dp(48);parent.addView(this);onItemSelectedListener=object:AdapterView.OnItemSelectedListener {override fun onNothingSelected(p:AdapterView<*>?){};override fun onItemSelected(p:AdapterView<*>?,v:View?,position:Int,id:Long){change(options[position])}} }
+        return Spinner(this).apply { contentDescription=I18n.t(this@CompanionActivity,label);adapter=appearance.adapter(options);setSelection(options.indexOf(initial).coerceAtLeast(0));minimumHeight=dp(48);parent.addView(this);onItemSelectedListener=object:AdapterView.OnItemSelectedListener {override fun onNothingSelected(p:AdapterView<*>?){};override fun onItemSelected(p:AdapterView<*>?,v:View?,position:Int,id:Long){change(options[position])}} }
     }
     private fun root(title: String) {
         fields.clear(); val outer=column();appearance.background(outer)
@@ -130,7 +130,7 @@ class CompanionActivity : Activity() {
         text(body,I18n.t(this,"Custom palette: use #RRGGBB colors. Palette fields apply when Custom is selected."),13f)
         for(k in listOf("background","surface","text","accent","bar")) input(body,k,k,appearance.stored(k,appearance.themes.getJSONObject("Custom").getString(k)))
         input(body,"gradient","Gradient end color (optional)",appearance.stored("gradient"));input(body,"dim","Wallpaper dimming (0–90%)",appearance.stored("dim","0"))
-        val motion=CheckBox(this).apply {text="Reduce motion";setTextColor(appearance.color("text"));isChecked=appearance.reduceMotion;body.addView(this)}
+        val motion=CheckBox(this).apply {text=I18n.t(this@CompanionActivity,"Reduce motion");setTextColor(appearance.color("text"));isChecked=appearance.reduceMotion;body.addView(this)}
         button(body,I18n.t(this,"Save appearance")) {appearance.save(selectedTheme,listOf("background","surface","text","accent","bar").associateWith {value(it)},value("gradient"),value("dim").toIntOrNull() ?: error("Enter dimming from 0 to 90."),motion.isChecked);render();toast("Appearance saved.")}
         button(body,I18n.t(this,"Choose wallpaper")) {startActivityForResult(Intent(Intent.ACTION_OPEN_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE).setType("image/*"),21)}
         button(body,I18n.t(this,"Remove wallpaper")) {File(filesDir,"wallpaper.jpg").delete();render()}
@@ -196,7 +196,21 @@ class CompanionActivity : Activity() {
         input(body,"url","Website link",qrValue,max=2000)
         button(body,I18n.t(this,"Generate QR code")) {qrValue=validLink(value("url"));render()}
         if(qrValue.isNotEmpty()) {val bitmap=BarcodeEncoder().encodeBitmap(qrValue,BarcodeFormat.QR_CODE,600,600);val image=ImageView(this).apply {setImageBitmap(bitmap);contentDescription="QR code for $qrValue"};body.addView(image,LinearLayout.LayoutParams(-1,dp(260)));button(body,I18n.t(this,"Save QR as PNG")) {startActivityForResult(Intent(Intent.ACTION_CREATE_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE).setType("image/png").putExtra(Intent.EXTRA_TITLE,"Digital-Journal-QR.png"),22)}}
-        button(body,I18n.t(this,"Scan QR code")) {IntentIntegrator(this).setDesiredBarcodeFormats(IntentIntegrator.QR_CODE).setPrompt("Scan a web link").setBeepEnabled(false).setOrientationLocked(false).initiateScan()}
+        button(body,I18n.t(this,"Scan QR code")) {startScan()}
+    }
+    private fun startScan() {
+        require(packageManager.hasSystemFeature(android.content.pm.PackageManager.FEATURE_CAMERA_ANY)) { "This device has no camera. QR generation is still available." }
+        if(checkSelfPermission(android.Manifest.permission.CAMERA) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(android.Manifest.permission.CAMERA),31); return
+        }
+        IntentIntegrator(this).setDesiredBarcodeFormats(IntentIntegrator.QR_CODE).setPrompt(I18n.t(this,"Scan a web link")).setBeepEnabled(false).setOrientationLocked(false).initiateScan()
+    }
+    override fun onRequestPermissionsResult(code: Int, permissions: Array<out String>, results: IntArray) {
+        super.onRequestPermissionsResult(code,permissions,results)
+        if(code==31) {
+            if(results.firstOrNull()==android.content.pm.PackageManager.PERMISSION_GRANTED) startScan()
+            else toast("Camera access was denied. QR generation is still available.")
+        }
     }
     private fun about() {
         root("About Digital Journal")

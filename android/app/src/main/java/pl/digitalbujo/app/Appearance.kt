@@ -20,6 +20,11 @@ class Appearance(private val context: Context) {
         for (v in custom.values + listOf(gradient).filter { it.isNotEmpty() }) require(Regex("#[0-9a-fA-F]{6}").matches(v)) { "Colors need six hexadecimal digits, e.g. #123456." }
         prefs.edit().apply { putString("theme",theme); custom.forEach { (k,v) -> putString(k,v) }; putString("gradient",gradient); putString("dim",dim.toString()); putBoolean("reduceMotion",motion) }.apply()
     }
+    fun adapter(options: List<String>) = object : android.widget.ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, options.map { I18n.t(context,it) }) {
+        private fun colors(view: View): View { (view as? android.widget.TextView)?.setTextColor(color("text")); view.setBackgroundColor(color("surface")); return view }
+        override fun getView(position: Int, convertView: View?, parent: android.view.ViewGroup): View = colors(super.getView(position,convertView,parent))
+        override fun getDropDownView(position: Int, convertView: View?, parent: android.view.ViewGroup): View = colors(super.getDropDownView(position,convertView,parent))
+    }
     fun background(view: View) {
         val file = File(context.filesDir,"wallpaper.jpg")
         val image = if (file.exists()) Drawable.createFromPath(file.path) else null

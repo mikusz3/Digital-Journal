@@ -249,7 +249,8 @@
       "Choose one idea, then choose unused pages before saving it.": "Choose one idea, then choose unused pages before saving it.",
       "A quiet companion for the pages you put pen to. Keep track of your paper journals and leave room for whatever comes next.": "A quiet companion for the pages you put pen to. Keep track of your paper journals and leave room for whatever comes next.",
       "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.": "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.",
-      "Month / Year · Start the grid on the weekday that fits your month.": "Month / Year · Start the grid on the weekday that fits your month."
+      "Month / Year · Start the grid on the weekday that fits your month.": "Month / Year · Start the grid on the weekday that fits your month.",
+      "Camera access was denied. QR generation is still available.": "Camera access was denied. QR generation is still available."
     },
     "pl": {
       "Settings": "Ustawienia",
@@ -489,7 +490,8 @@
       "Choose one idea, then choose unused pages before saving it.": "Wybierz pomysł, a następnie wolne strony przed zapisem.",
       "A quiet companion for the pages you put pen to. Keep track of your paper journals and leave room for whatever comes next.": "Spokojny towarzysz papierowych stron. Bez serii do utrzymania i nadrabiania zaległości.",
       "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.": "Zacznij od notesu obok Ciebie. Dodaj indeks stron wtedy, gdy masz ochotę.",
-      "Month / Year · Start the grid on the weekday that fits your month.": "Miesiąc / Rok"
+      "Month / Year · Start the grid on the weekday that fits your month.": "Miesiąc / Rok",
+      "Camera access was denied. QR generation is still available.": "Odmówiono dostępu do aparatu. Nadal możesz generować kody QR."
     },
     "de": {
       "Settings": "Einstellungen",
@@ -729,7 +731,8 @@
       "Choose one idea, then choose unused pages before saving it.": "Wähle eine Idee und dann freie Seiten, bevor du sie speicherst.",
       "A quiet companion for the pages you put pen to. Keep track of your paper journals and leave room for whatever comes next.": "Ein ruhiger Begleiter für deine Papierseiten. Keine Serien, kein Nachholen.",
       "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.": "Beginne mit dem Notizbuch neben dir. Ergänze das Verzeichnis, wann du möchtest.",
-      "Month / Year · Start the grid on the weekday that fits your month.": "Monat / Jahr"
+      "Month / Year · Start the grid on the weekday that fits your month.": "Monat / Jahr",
+      "Camera access was denied. QR generation is still available.": "Kamerazugriff abgelehnt. QR-Codes können weiterhin erstellt werden."
     },
     "es": {
       "Settings": "Ajustes",
@@ -969,7 +972,8 @@
       "Choose one idea, then choose unused pages before saving it.": "Elige una idea y después páginas libres antes de guardarla.",
       "A quiet companion for the pages you put pen to. Keep track of your paper journals and leave room for whatever comes next.": "Un compañero tranquilo para tus páginas. Sin rachas ni nada que recuperar.",
       "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.": "Empieza con el cuaderno que tienes al lado. Añade su índice cuando quieras.",
-      "Month / Year · Start the grid on the weekday that fits your month.": "Mes / Año"
+      "Month / Year · Start the grid on the weekday that fits your month.": "Mes / Año",
+      "Camera access was denied. QR generation is still available.": "Se ha denegado el acceso a la cámara. Puedes seguir generando códigos QR."
     },
     "es-419": {
       "Settings": "Configuración",
@@ -1209,7 +1213,8 @@
       "Choose one idea, then choose unused pages before saving it.": "Elige una idea y después páginas libres antes de guardarla.",
       "A quiet companion for the pages you put pen to. Keep track of your paper journals and leave room for whatever comes next.": "Un compañero tranquilo para tus páginas. Sin rachas ni nada que recuperar.",
       "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.": "Empieza con el cuaderno que tienes al lado. Agrega su índice cuando quieras.",
-      "Month / Year · Start the grid on the weekday that fits your month.": "Mes / Año"
+      "Month / Year · Start the grid on the weekday that fits your month.": "Mes / Año",
+      "Camera access was denied. QR generation is still available.": "Se denegó el acceso a la cámara. Puedes seguir generando códigos QR."
     },
     "ja": {
       "Settings": "設定",
@@ -1449,7 +1454,8 @@
       "Choose one idea, then choose unused pages before saving it.": "アイデアを選び、空いているページを指定して保存します。",
       "A quiet companion for the pages you put pen to. Keep track of your paper journals and leave room for whatever comes next.": "紙のページの静かな相棒。連続記録や遅れを取り戻す必要はありません。",
       "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.": "手元のノートから始めましょう。好きなときにインデックスを追加できます。",
-      "Month / Year · Start the grid on the weekday that fits your month.": "月・年"
+      "Month / Year · Start the grid on the weekday that fits your month.": "月・年",
+      "Camera access was denied. QR generation is still available.": "カメラへのアクセスが拒否されました。QRコードの生成は引き続き使えます。"
     },
     "ru": {
       "Settings": "Настройки",
@@ -1689,7 +1695,8 @@
       "Choose one idea, then choose unused pages before saving it.": "Выберите идею, затем свободные страницы перед сохранением.",
       "A quiet companion for the pages you put pen to. Keep track of your paper journals and leave room for whatever comes next.": "Спокойный помощник для бумажных страниц. Без серий и необходимости наверстывать.",
       "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.": "Начните с блокнота рядом. Добавьте указатель страниц, когда захотите.",
-      "Month / Year · Start the grid on the weekday that fits your month.": "Месяц / Год"
+      "Month / Year · Start the grid on the weekday that fits your month.": "Месяц / Год",
+      "Camera access was denied. QR generation is still available.": "Доступ к камере запрещён. Создание QR-кодов по-прежнему доступно."
     },
     "uk": {
       "Settings": "Налаштування",
@@ -1929,7 +1936,8 @@
       "Choose one idea, then choose unused pages before saving it.": "Виберіть ідею, потім вільні сторінки перед збереженням.",
       "A quiet companion for the pages you put pen to. Keep track of your paper journals and leave room for whatever comes next.": "Спокійний помічник для паперових сторінок. Без серій і потреби надолужувати.",
       "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.": "Почніть із записника поруч. Додайте зміст сторінок, коли захочете.",
-      "Month / Year · Start the grid on the weekday that fits your month.": "Місяць / Рік"
+      "Month / Year · Start the grid on the weekday that fits your month.": "Місяць / Рік",
+      "Camera access was denied. QR generation is still available.": "Доступ до камери заборонено. Створення QR-кодів і далі доступне."
     },
     "fr": {
       "Settings": "Paramètres",
@@ -2169,7 +2177,8 @@
       "Choose one idea, then choose unused pages before saving it.": "Choisissez une idée, puis des pages libres avant d’enregistrer.",
       "A quiet companion for the pages you put pen to. Keep track of your paper journals and leave room for whatever comes next.": "Un compagnon paisible pour vos pages. Aucune série à maintenir, rien à rattraper.",
       "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.": "Commencez par le carnet à côté de vous. Ajoutez son index quand vous le souhaitez.",
-      "Month / Year · Start the grid on the weekday that fits your month.": "Mois / Année"
+      "Month / Year · Start the grid on the weekday that fits your month.": "Mois / Année",
+      "Camera access was denied. QR generation is still available.": "L’accès à la caméra a été refusé. La génération de codes QR reste disponible."
     }
   }
 }
