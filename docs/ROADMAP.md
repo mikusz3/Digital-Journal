@@ -1,6 +1,6 @@
 # Digital Journal — incremental delivery
 
-Tasks 1–3 are implemented: desktop foundation, journal/spread editing, backup transfer, and native Android foundation. See `PROJECT_STATUS.md` for verification and current limitations.
+Tasks 1–3, 5–7, 9–10 and the supported part of 12 are implemented. Task 13 is covered by cross-platform build/test workflows and release packaging. Additional requested features are spread layouts, a 5–30 minute tomato timer and nine interface languages. See release notes for actual device coverage and live AI limitations. Tasks 4, 8, 11 and 14 are deferred.
 
 ## Product intent
 
@@ -60,4 +60,4 @@ Desktop and Android are separate deliverables. A browser preview is not a Window
 
 ## Verification and usage discipline
 
-Read this roadmap and `PROJECT_STATUS.md` before later work. Inspect only the current task's files. Run focused checks and keep successful output concise. Update the status record after each task. Do not claim Windows, phone, printer or external-app compatibility based solely on a local build.
+Read this roadmap and the release notes before later work. Inspect only the current task's files. Run focused checks and keep successful output concise. Update the status record after each task. Do not claim Windows, phone, printer or external-app compatibility based solely on a local build.

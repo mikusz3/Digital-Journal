@@ -17,6 +17,9 @@ Get builds from [GitHub Releases](https://github.com/mikusz3/Digital-Journal/rel
 
 ## Features
 
+- Spread guides: calendar with notes, tracker, log, wishlist, blank and AI-assisted/custom layouts. AI drafts include practical layout instructions for review.
+- A task-linked tomato timer: 5–30 minutes, pause/resume/stop, persistent countdown. Android does not schedule a background alarm; it reports completion on the timer screen.
+- Selectable Polish, English, German, Spanish (Spain and Latin America), Japanese, Russian, Ukrainian and French interfaces. User content is preserved in its original language; legal notices and some technical/system messages retain their source language.
 - Local profiles, journals, page ranges, search and edits; exact-name-confirmed profile deletion.
 - Backup export/import with preview; imports become separate copies and never overwrite existing profiles.
 - Tasks, optional dates, notes and subtasks, completion/reopening, and optional confetti respecting reduced motion.

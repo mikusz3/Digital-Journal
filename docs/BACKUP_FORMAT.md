@@ -11,3 +11,5 @@ Import creates new IDs for every profile, journal, spread, task and subtask. Exi
 Range validation rejects journal pages outside 1–10000, reversed/out-of-range spreads and overlaps. Task dates are validated as actual calendar dates. IDs are unique across the entire state. Corrupt local data is preserved and reported; it is never silently reset.
 
 An exported file can contain personal information. Profile deletion does not remove previously exported files. Older app versions cannot import the new format; keep an old backup before downgrading.
+
+Spreads may include `layout: { kind, notes }`. Supported kinds are blank, calendar, tracker, log, wishlist and custom. Layout notes are limited to 2000 characters. Missing layout fields remain compatible with older version-2 files. Timer state and language preferences remain device-local.
