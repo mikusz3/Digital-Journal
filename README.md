@@ -29,7 +29,7 @@ Collections (task 8), print layout (11), printable installation QR (14), and jou
 
 ## Optional AI
 
-Open **Settings → AI provider keys** and enter your own provider key there, never in a GitHub issue or chat. API billing is separate from ChatGPT/Codex subscriptions. Configure a model your provider account can access; the editable defaults are `gpt-4.1-mini` and `deepseek-chat`.
+Open **Settings → AI provider keys** and enter your own provider key there, never in a GitHub issue or chat. API billing is separate from ChatGPT/Codex subscriptions. Configure a model your provider account can access; the editable defaults are `gpt-4.1-mini` and `deepseek-flash`.
 
 The app sends only the text displayed in the AI form, when you press Generate, directly to the selected provider over HTTPS. It does not upload your whole profile or backup. Results cannot run commands or silently write to journals. Generated content can be mistaken; review it. Manual planning works without a key or internet.
 

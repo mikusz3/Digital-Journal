@@ -21,7 +21,8 @@ object TaskData {
     fun save(profile: JSONObject, id: String?, title: String, notes: String, due: String, lines: List<String>): String {
         val existing = id?.let { key -> tasks(profile).find { it.getString("id") == key } ?: error("Task not found.") }
         val oldSteps = existing?.let { JournalData.list(it.getJSONArray("subtasks")) } ?: emptyList()
-        val steps = lines.filter { it.isNotBlank() }.mapIndexed { i, line -> JSONObject().put("id",oldSteps.getOrNull(i)?.getString("id") ?: JournalData.id()).put("title",JournalData.label(line,"Subtask title")).put("done",oldSteps.getOrNull(i)?.getBoolean("done") ?: false) }
+        val cleaned=lines.filter {it.isNotBlank()}.map {it.trim()};val used=mutableSetOf<String>()
+        val steps=cleaned.mapIndexed {i,line->val old=oldSteps.find {it.getString("title")==line && it.getString("id") !in used} ?: oldSteps.getOrNull(i)?.takeIf {it.getString("title") !in cleaned && it.getString("id") !in used};old?.let {used.add(it.getString("id"))};JSONObject().put("id",old?.getString("id") ?: JournalData.id()).put("title",JournalData.label(line,"Subtask title")).put("done",old?.getBoolean("done") ?: false)}
         val t = JSONObject().put("id",id ?: JournalData.id()).put("title",JournalData.label(title,"Task title")).put("notes",notes.trim()).put("due",due.trim()).put("done",existing?.getBoolean("done") ?: false).put("subtasks",JSONArray(steps))
         validate(listOf(t)) {}
         profile.put("tasks",JSONArray(if (existing == null) tasks(profile) + t else tasks(profile).map { if (it.getString("id") == id) t else it }))

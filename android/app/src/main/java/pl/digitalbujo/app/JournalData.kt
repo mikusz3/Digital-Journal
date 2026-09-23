@@ -44,6 +44,7 @@ object JournalData {
                 var last = 0
                 for (s in spreads(j)) {
                     checkId(s); text(s, "title", 120)
+                    if(s.has("layout")) validateLayout(s.getJSONObject("layout"))
                     val start = number(s, "start", 1, pages)
                     val end = number(s, "end", start, pages)
                     require(start > last) { "Spread page ranges overlap." }
@@ -83,7 +84,7 @@ object JournalData {
         if (journalId == null) profile(state, profileId).getJSONArray("journals").put(j)
         return j.getString("id")
     }
-    fun saveSpread(state: JSONObject, profileId: String, journalId: String, spreadId: String?, title: String, start: Int, end: Int): String {
+    fun saveSpread(state: JSONObject, profileId: String, journalId: String, spreadId: String?, title: String, start: Int, end: Int, layout: JSONObject? = null): String {
         val j = journal(state, profileId, journalId)
         val cleaned = label(title, "Spread title")
         require(start >= 1 && end >= start && end <= j.getInt("pages")) { "Use a page range within this journal, with last page after or equal to first." }
@@ -92,8 +93,13 @@ object JournalData {
         require(all.none { it.getString("id") != spreadId && start <= it.getInt("end") && end >= it.getInt("start") }) { "These pages already belong to another spread." }
         val s = existing ?: JSONObject().put("id", id())
         s.put("title", cleaned).put("start", start).put("end", end)
+        if(layout != null) s.put("layout",validateLayout(layout))
         if (existing == null) j.getJSONArray("spreads").put(s)
         return s.getString("id")
+    }
+    fun validateLayout(layout: JSONObject): JSONObject {
+        require(layout.getString("kind") in listOf("blank","calendar","tracker","log","wishlist","custom") && layout.get("notes") is String && layout.getString("notes").length<=2000) { "Invalid spread template." }
+        return JSONObject().put("kind",layout.getString("kind")).put("notes",layout.getString("notes"))
     }
     fun backup(state: JSONObject): String {
         val text = JSONObject().put("format", "digital-journal").put("backupVersion", 2)
@@ -115,7 +121,7 @@ object JournalData {
             for (j in journals(p)) {
                 val cj = JSONObject().put("id", j.getString("id")).put("title", j.getString("title")).put("pages", j.getInt("pages"))
                     .put("format", j.getString("format")).put("formatDetail", j.optString("formatDetail", "")).put("spreads", JSONArray())
-                for (s in spreads(j)) cj.getJSONArray("spreads").put(JSONObject().put("id", s.getString("id")).put("title", s.getString("title")).put("start", s.getInt("start")).put("end", s.getInt("end")))
+                for (s in spreads(j)) { val cs=JSONObject().put("id", s.getString("id")).put("title", s.getString("title")).put("start", s.getInt("start")).put("end", s.getInt("end")); if(s.has("layout")) cs.put("layout",validateLayout(s.getJSONObject("layout"))); cj.getJSONArray("spreads").put(cs) }
                 copy.getJSONArray("journals").put(cj)
             }
             clean.getJSONArray("profiles").put(copy)

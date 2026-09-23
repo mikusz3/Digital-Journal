@@ -8,3 +8,6 @@ body{min-height:100vh;background-color:var(--background);background-size:cover;b
 
 #notice{color:var(--background)}[data-theme="Dark"] .danger-text,[data-theme="Matrix"] .danger-text,[data-theme="Discord-inspired"] .danger-text{color:#ff9a88}
 .layout-grid{display:grid;grid-template-columns:repeat(var(--columns),1fr);margin:14px 0}.layout-grid>div{min-height:36px;border:1px solid var(--line);padding:6px;font-size:11px;overflow-wrap:anywhere}
+
+.columns-7{--columns:7}.columns-3{--columns:3}
+#focus-timer{position:fixed;bottom:12px;left:12px;z-index:10;display:flex;gap:10px;align-items:center;padding:12px;background:var(--surface);color:var(--text);border:2px solid #cb5349;border-radius:24px;max-width:calc(100vw - 24px);box-shadow:0 3px 20px #0004}#focus-timer strong{font-size:23px;font-variant-numeric:tabular-nums}#focus-timer [data-timer-title]{max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#focus-timer button{padding:7px}.workspace{padding-bottom:110px}

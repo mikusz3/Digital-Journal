@@ -106,7 +106,7 @@ class MainActivity : Activity() {
         parent.addView(this)
     }
     private fun button(parent: LinearLayout, label: String, primary: Boolean = false, action: () -> Unit): Button = Button(this).apply {
-        text = label; isAllCaps = false; minHeight = dp(48)
+        text = I18n.t(this@MainActivity,label); isAllCaps = false; minHeight = dp(48)
         setTextColor(if (primary) paper else ink)
         background = GradientDrawable().apply { setColor(if (primary) green else appearance.color("bar")); cornerRadius = dp(10).toFloat() }
         layoutParams = LinearLayout.LayoutParams(-1, -2).apply { setMargins(0, dp(5), 0, dp(9)) }
@@ -132,7 +132,7 @@ class MainActivity : Activity() {
             }
             insets
         }
-        text(outer, "Digital Journal", 24f, green)
+        text(outer, I18n.t(this,"Digital Journal"), 24f, green)
         val toolbar=LinearLayout(this).apply { orientation=LinearLayout.HORIZONTAL; outer.addView(this) }
         for ((label,mode) in listOf("Settings" to "settings","QR" to "qr","About" to "about")) button(toolbar,label) { tools(mode) }.layoutParams=LinearLayout.LayoutParams(0,-2,1f)
         val scroll = ScrollView(this).apply { isFillViewport = true }
@@ -140,45 +140,45 @@ class MainActivity : Activity() {
         scroll.addView(content); outer.addView(scroll, LinearLayout.LayoutParams(-1, 0, 1f))
         setContentView(outer); outer.requestApplyInsets()
         if (profileId == null) {
-            text(content, "Your journal. Your own pace.", 27f)
-            text(content, "A quiet companion to your paper pages. No streaks to keep, no catching up required.", color = muted)
+            text(content, I18n.t(this,"Your journal. Your own pace."), 27f)
+            text(content, I18n.t(this,"A quiet companion to your paper pages. No streaks to keep, no catching up required."), color = muted)
             JournalData.profiles(state()).forEach { p ->
                 val tile = card(content)
                 button(tile, "${p.getString("name")} · ${JournalData.journals(p).size} journals") {
                     profileId = p.getString("id"); journalId = null; render()
                 }
-                button(tile, "Delete profile") { deleteProfileForm(p.getString("id")) }.apply {
+                button(tile, I18n.t(this,"Delete profile")) { deleteProfileForm(p.getString("id")) }.apply {
                     setTextColor(Color.rgb(151, 54, 41)); contentDescription = "Delete profile ${p.getString("name")}"
                 }
             }
-            button(content, "Create a profile", true) { profileForm() }
-            button(content, "Backups") { backups() }
-            text(content, "Profiles and journals stay on this device. No email or password needed.", 13f, muted)
+            button(content, I18n.t(this,"Create a profile"), true) { profileForm() }
+            button(content, I18n.t(this,"Backups")) { backups() }
+            text(content, I18n.t(this,"Profiles and journals stay on this device. No email or password needed."), 13f, muted)
             return
         }
-        button(content,"Tasks & plans") { tools("tasks") }
+        button(content,I18n.t(this,"Tasks & plans")) { tools("tasks") }
         if (journalId == null) {
-            text(content, "${profile()!!.getString("name")}’s journal shelf", 26f)
-            button(content, "Switch or add profile") { profileId = null; render() }
+            text(content, "${profile()!!.getString("name")} · ${I18n.t(this,"Your journal shelf")}", 26f)
+            button(content, I18n.t(this,"Switch or add profile")) { profileId = null; render() }
             val journals = JournalData.journals(profile()!!)
-            if (journals.isEmpty()) text(content, "Start with the notebook beside you. Add its page index whenever you feel like it.", color = muted)
+            if (journals.isEmpty()) text(content, I18n.t(this,"Start with the notebook beside you. Add its page index whenever you feel like it."), color = muted)
             journals.forEach { j -> val tile = card(content)
                 text(tile, j.getString("title"), 23f)
                 text(tile, "${j.getString("format")} · ${j.getInt("pages")} pages · ${JournalData.spreads(j).size} spreads", 13f, muted)
                 button(tile, "Open ${j.getString("title")}") { journalId = j.getString("id"); query = ""; render() }
             }
-            button(content, "Add journal", true) { journalForm() }
-            button(content, "Backups") { backups() }
+            button(content, I18n.t(this,"Add journal"), true) { journalForm() }
+            button(content, I18n.t(this,"Backups")) { backups() }
             return
         }
         val j = journal()!!
-        button(content, "Back to journals") { journalId = null; query = ""; render() }
+        button(content, I18n.t(this,"Back to journals")) { journalId = null; query = ""; render() }
         text(content, j.getString("title"), 27f)
         val size = if (j.getString("format") == "Custom") j.getString("formatDetail") else j.getString("format")
         text(content, "$size · ${j.getInt("pages")} pages · saved on this device", 13f, muted)
-        button(content, "Edit journal") { journalForm(j.getString("id")) }
-        button(content, "Add spread", true) { spreadForm() }
-        button(content, "AI spread ideas") { tools("ai") }
+        button(content, I18n.t(this,"Edit journal")) { journalForm(j.getString("id")) }
+        button(content, I18n.t(this,"Add spread"), true) { spreadForm() }
+        button(content, I18n.t(this,"AI spread ideas")) { tools("ai") }
         val search = EditText(this).apply { setTextColor(ink); setHintTextColor(muted); hint = "Find a spread"; contentDescription = "Find a spread"; setSingleLine(); setText(query) }
         content.addView(search)
         val list = column(); content.addView(list)
@@ -190,6 +190,7 @@ class MainActivity : Activity() {
                 val tile = card(list)
                 text(tile, "Pages ${s.getInt("start")}–${s.getInt("end")}", 12f, muted)
                 text(tile, s.getString("title"), 19f)
+                button(tile,I18n.t(this,"View spread template")) { SpreadLayouts.show(this,s) }
                 button(tile, "Edit ${s.getString("title")}") { spreadForm(s.getString("id")) }
             }
         }
@@ -204,31 +205,31 @@ class MainActivity : Activity() {
         currentDialog?.dismiss(); fields.clear(); dialogKind = kind; editingId = id
         val body = column().apply { setBackgroundColor(appearance.color("surface")); setPadding(dp(24), dp(8), dp(24), dp(12)) }
         build(body)
-        val error = text(body, "", 13f, Color.rgb(151, 54, 41))
+        val error = text(body, I18n.t(this,""), 13f, Color.rgb(151, 54, 41))
         val scroll = ScrollView(this).apply { addView(body) }
-        val dialog = AlertDialog.Builder(this).setTitle(title).setView(scroll).setNegativeButton("Cancel", null).setPositiveButton(if (kind == "delete") "Delete profile" else "Save", null).create()
+        val dialog = AlertDialog.Builder(this).setTitle(I18n.t(this,title)).setView(scroll).setNegativeButton(I18n.t(this@MainActivity,"Cancel"), null).setPositiveButton(if (kind == "delete") "Delete profile" else I18n.t(this,"Save"), null).create()
         currentDialog = dialog
         dialog.setOnDismissListener { dialogKind = ""; editingId = null; fields.clear(); currentDialog = null }
         dialog.setOnShowListener { dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
             try { save(); dialog.dismiss(); render(); toast(if (kind == "delete") "Profile deleted from this device." else "Saved on this device.") }
-            catch (e: Exception) { error.text = e.message ?: "Could not save. Please try again." }
+            catch (e: Exception) { error.text = I18n.t(this,e.message ?: "Please try again.") ?: "Could not save. Please try again." }
         } }
         dialog.show()
     }
     private fun input(parent: LinearLayout, key: String, label: String, value: String = "", numeric: Boolean = false, max: Int = 120): EditText {
-        val labelView = text(parent, label, 13f)
+        val labelView = text(parent, I18n.t(this,label), 13f)
         return EditText(this).apply {
             id = View.generateViewId(); labelView.labelFor = id
-            contentDescription = label; setTextColor(ink); setSingleLine(); setText(value)
+            contentDescription = I18n.t(this@MainActivity,label); setTextColor(ink); setSingleLine(); setText(value)
             inputType = if (numeric) InputType.TYPE_CLASS_NUMBER else InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
             filters = arrayOf(InputFilter.LengthFilter(max)); parent.addView(this); fields[key] = this
         }
     }
     private fun select(parent: LinearLayout, key: String, label: String, options: List<String>, selected: Int = 0): Spinner {
-        val labelView = text(parent, label, 13f)
+        val labelView = text(parent, I18n.t(this,label), 13f)
         return Spinner(this).apply {
             id = View.generateViewId(); labelView.labelFor = id; contentDescription = label
-            adapter = ArrayAdapter(this@MainActivity, android.R.layout.simple_spinner_dropdown_item, options)
+            adapter = ArrayAdapter(this@MainActivity, android.R.layout.simple_spinner_dropdown_item, options.map {I18n.t(this@MainActivity,it)})
             setSelection(selected); minimumHeight = dp(48); parent.addView(this); fields[key] = this
         }
     }
@@ -236,7 +237,7 @@ class MainActivity : Activity() {
     private fun selected(key: String) = (fields[key] as Spinner).selectedItemPosition
     private fun integer(key: String) = value(key).toIntOrNull() ?: error("Enter a whole number for $key.")
     private fun profileForm() = form("profile", "A space of your own", build = { body ->
-        text(body, "Only stored here. Use your name or a name you prefer.", 13f, muted)
+        text(body, I18n.t(this,"Only stored here. Use your name or a name you prefer."), 13f, muted)
         input(body, "name", "Full name", max = 80)
     }, save = {
         var newId: String? = null
@@ -253,6 +254,7 @@ class MainActivity : Activity() {
             text(body, p.getString("name"), 16f)
         }, save = {
             repository.change { JournalData.deleteProfile(it, id, value("confirmation")) }
+            if(Pomodoro(this).read()?.optString("profileId")==id) Pomodoro(this).reset()
             profileId = null; journalId = null; query = ""
         })
     }
@@ -264,7 +266,7 @@ class MainActivity : Activity() {
             select(body, "format", "Notebook size", JournalData.formats, JournalData.formats.indexOf(existing?.getString("format") ?: "A5"))
             input(body, "detail", "Custom size (only for Custom)", existing?.optString("formatDetail") ?: "", max = 60)
             if (id == null) select(body, "template", "Starting index", listOf("Blank", "2026/2027/2028 starter index", "DLC starter index"))
-            text(body, "Starter indexes need 200 pages. Unnamed pages stay open.", 12f, muted)
+            text(body, I18n.t(this,"Starter indexes need 200 pages. Unnamed pages stay open."), 12f, muted)
         }, save = {
             var newId: String? = null
             val template = if (id == null && selected("template") > 0) {
@@ -278,23 +280,26 @@ class MainActivity : Activity() {
     private fun spreadForm(id: String? = null) {
         val existing = id?.let { key -> JournalData.spreads(journal()!!).find { it.getString("id") == key } }
         form("spread", if (id == null) "Add spread" else "Edit spread", id, build = { body ->
+            select(body,"layout","Template",listOf("Blank","Calendar with notes","Tracker","Log","Wishlist","AI-assisted / custom"),listOf("blank","calendar","tracker","log","wishlist","custom").indexOf(existing?.optJSONObject("layout")?.optString("kind") ?: "blank"))
+            input(body,"layoutNotes","Layout notes",existing?.optJSONObject("layout")?.optString("notes") ?: "",max=2000)
+            button(body,I18n.t(this,"Let AI help with this spread/page")) { val context="Help design a ${listOf("blank","calendar","tracker","log","wishlist","custom")[selected("layout")]} spread: ${value("title")}. ${value("layoutNotes")}";currentDialog?.dismiss();startActivity(Intent(this,CompanionActivity::class.java).putExtra("mode","ai").putExtra("profile",profileId).putExtra("journal",journalId).putExtra("context",context)) }
             input(body, "title", "Spread title", existing?.getString("title") ?: "")
             input(body, "start", "First page", existing?.getInt("start")?.toString() ?: "", true, 5)
             input(body, "end", "Last page", existing?.getInt("end")?.toString() ?: "", true, 5)
             text(body, "For a single page use the same number twice. This journal has ${journal()!!.getInt("pages")} pages.", 13f, muted)
-        }, save = { repository.change { JournalData.saveSpread(it, profileId!!, journalId!!, id, value("title"), integer("start"), integer("end")) } })
+        }, save = { repository.change { JournalData.saveSpread(it, profileId!!, journalId!!, id, value("title"), integer("start"), integer("end"),JSONObject().put("kind",listOf("blank","calendar","tracker","log","wishlist","custom")[selected("layout")]).put("notes",value("layoutNotes"))) } })
     }
-    private fun toast(message: String) = Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-    private fun problem(error: Exception) = AlertDialog.Builder(this).setTitle("Could not complete that action").setMessage(error.message ?: "Please try again.").setPositiveButton("OK", null).show()
+    private fun toast(message: String) = Toast.makeText(this, I18n.t(this,message), Toast.LENGTH_LONG).show()
+    private fun problem(error: Exception) = AlertDialog.Builder(this).setTitle(I18n.t(this@MainActivity,"Could not complete that action")).setMessage(error.message ?: "Please try again.").setPositiveButton(I18n.t(this@MainActivity,"OK"), null).show()
     private fun backups() {
         currentDialog?.dismiss(); dialogKind = "backups"
-        val dialog = AlertDialog.Builder(this).setTitle("Journal backups")
-            .setMessage("Export all profiles, or import separate copies. Existing journals are never replaced. Backups contain names and journal content in plain text.")
-            .setNegativeButton("Close", null)
-            .setNeutralButton("Export") { _, _ ->
+        val dialog = AlertDialog.Builder(this).setTitle(I18n.t(this@MainActivity,"Journal backups"))
+            .setMessage(I18n.t(this@MainActivity,"Export all profiles, or import separate copies. Existing journals are never replaced. Backups contain names and journal content in plain text."))
+            .setNegativeButton(I18n.t(this@MainActivity,"Close"), null)
+            .setNeutralButton(I18n.t(this@MainActivity,"Export")) { _, _ ->
                 startActivityForResult(Intent(Intent.ACTION_CREATE_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE).setType("application/json").putExtra(Intent.EXTRA_TITLE, "Digital-Journal-${java.time.LocalDate.now()}.json"), 10)
             }
-            .setPositiveButton("Import") { _, _ ->
+            .setPositiveButton(I18n.t(this@MainActivity,"Import")) { _, _ ->
                 startActivityForResult(Intent(Intent.ACTION_OPEN_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE).setType("*/*"), 11)
             }.create()
         currentDialog = dialog
@@ -306,10 +311,10 @@ class MainActivity : Activity() {
             val imported = JournalData.parseBackup(pendingFile.readText())
             val summary = JournalData.profiles(imported).joinToString("\n") { "${it.getString("name")} · ${JournalData.journals(it).size} journals" }
             currentDialog?.dismiss(); dialogKind = "import"
-            val dialog = AlertDialog.Builder(this).setTitle("Import as new profiles?")
+            val dialog = AlertDialog.Builder(this).setTitle(I18n.t(this@MainActivity,"Import as new profiles?"))
                 .setMessage("$summary\n\nMatching names receive an import suffix. This adds copies; it is not synchronization.")
-                .setNegativeButton("Cancel") { _, _ -> pendingFile.delete() }
-                .setPositiveButton("Import", null).create()
+                .setNegativeButton(I18n.t(this@MainActivity,"Cancel")) { _, _ -> pendingFile.delete() }
+                .setPositiveButton(I18n.t(this@MainActivity,"Import"), null).create()
             currentDialog = dialog
             dialog.setOnDismissListener { dialogKind = ""; currentDialog = null }
             dialog.setOnShowListener { dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {

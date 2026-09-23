@@ -22,7 +22,7 @@ test('profile, journal and spread persist through a new store instance', t => {
   const restored = new JournalStore(dir).read();
   assert.deepEqual(restored, store.read());
   assert.equal(restored.profiles[0].journals[0].spreads[0].title, 'A small win');
-  assert.equal(fs.statSync(store.file).mode & 0o777, 0o600);
+  if (process.platform !== 'win32') assert.equal(fs.statSync(store.file).mode & 0o777, 0o600); // POSIX permission bits are not supported on Windows.
 });
 test('one profile cannot add spreads to another profile’s journal', t => {
   const { store } = setup(t);

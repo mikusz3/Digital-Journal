@@ -31,6 +31,18 @@ else {
       if (event.senderFrame !== window?.webContents.mainFrame || event.senderFrame.url !== pageUrl) return { ok: false, error: 'This window cannot access journal data.' };
       try {
         if (loadError) throw new Error(loadError);
+        if (action === 'timer') {
+          if (input?.action) {
+            if (input.action === 'start') {
+              const task = store.read().profiles.find(p => p.id === input.profileId)?.tasks?.find(t => t.id === input.taskId);
+              if (!task) throw new Error('Task not found.');
+              input = { ...input, title: task.title };
+            }
+            preferences.data.timer = require('../core/pomodoro.cjs').change(preferences.data.timer, input);
+            preferences.write(preferences.file, preferences.data);
+          }
+          return { ok: true, timer: preferences.data.timer || null };
+        }
         if (action === 'preferences') return { ok: true, preferences: preferences.read() };
         if (action === 'savePreferences') return { ok: true, preferences: preferences.save(input) };
         if (action === 'setKey') return { ok: true, preferences: preferences.setKey(input) };
@@ -39,7 +51,7 @@ else {
           if (aiRequest) throw new Error('An AI request is already running.');
           const controller = new AbortController(); aiRequest = controller;
           const timer = setTimeout(() => controller.abort(), 60000);
-          try { return { ok: true, items: await require('../core/ai.cjs').generate(input, preferences.key(input.provider), controller.signal) }; }
+          try { return { ok: true, items: await require('../core/ai.cjs').generate({ ...input, language: preferences.data.language || 'en' }, preferences.key(input.provider), controller.signal) }; }
           finally { clearTimeout(timer); aiRequest = null; }
         }
         if (action === 'wallpaper') {
@@ -65,7 +77,11 @@ else {
           pendingImport = null;
           return { ok: true, ...result };
         }
-        return { ok: true, ...store.change(action, input) };
+        const changed = store.change(action, input);
+        if (preferences.data.timer && ((action === 'deleteProfile' && preferences.data.timer.profileId === input.profileId) || (action === 'deleteTask' && preferences.data.timer.taskId === input.taskId))) {
+          preferences.data.timer = null; preferences.write(preferences.file, preferences.data);
+        }
+        return { ok: true, ...changed };
       } catch (error) { return { ok: false, error: error.message }; }
     });
     createWindow();

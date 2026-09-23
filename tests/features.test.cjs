@@ -41,3 +41,20 @@ test('key vault refuses plaintext persistence and never returns credentials', t 
   p.setKey({provider:'openai',key:'not-a-real-key',remember:false});assert.equal(p.key('openai'),'not-a-real-key');assert.equal(JSON.stringify(p.read()).includes('not-a-real-key'),false);assert.equal(fs.readFileSync(p.vault,'utf8'),'{}');
   p.setKey({provider:'openai',key:'',remember:false});assert.equal(p.key('openai'),'');
 });
+test('tomato timer bounds, pause, resume and expiry use deadlines',()=>{
+  const {change,remaining}=require('../core/pomodoro.cjs');
+  assert.throws(()=>change(null,{action:'start',minutes:4}));assert.throws(()=>change(null,{action:'start',minutes:31}));
+  let timer=change(null,{action:'start',minutes:5,title:'Task'},1000);assert.equal(remaining(timer,61000),240000);
+  timer=change(timer,{action:'pause'},61000);assert.equal(remaining(timer,100000),240000);
+  timer=change(timer,{action:'resume'},100000);assert.equal(remaining(timer,340000),0);assert.equal(change(timer,{action:'reset'}),null);
+});
+test('spread templates survive transfer and malformed templates are refused',t=>{
+  const s=store(t);const pid=s.change('createProfile',{name:'Templates'}).id;const jid=s.change('createJournal',{profileId:pid,title:'Book',format:'A5',pages:100}).id;
+  s.change('addSpread',{profileId:pid,journalId:jid,title:'Month',start:1,end:2,layout:{kind:'calendar',notes:'Notes on the right'}});
+  assert.deepEqual(parseBackup(createBackup(s.read())).profiles[0].journals[0].spreads[0].layout,{kind:'calendar',notes:'Notes on the right'});
+  assert.throws(()=>s.change('addSpread',{profileId:pid,journalId:jid,title:'Wrong',start:3,end:4,layout:{kind:'execute-code',notes:''}}));
+});
+test('all requested locales contain the same supported interface keys',()=>{
+  const {languages,messages}=require('../core/locales.json');assert.deepEqual(Object.keys(languages).sort(),['en','pl','de','es','es-419','ja','ru','uk','fr'].sort());
+  for(const code of Object.keys(languages)){assert.deepEqual(Object.keys(messages[code]).sort(),Object.keys(messages.en).sort());for(const value of Object.values(messages[code]))assert.ok(value.length);}
+});

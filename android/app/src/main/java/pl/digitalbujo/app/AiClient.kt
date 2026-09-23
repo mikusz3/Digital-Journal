@@ -39,12 +39,12 @@ class AiClient {
     @Volatile private var connection: HttpsURLConnection? = null
     @Volatile private var canceled = false
     fun cancel() { canceled = true; connection?.disconnect() }
-    fun generate(provider: String, model: String, kind: String, context: String, key: String): List<JSONObject> {
+    fun generate(provider: String, model: String, kind: String, context: String, key: String, language: String = "English"): List<JSONObject> {
         require(provider in listOf("openai","deepseek") && kind in listOf("steps","spreads")) { "Unknown provider or suggestion type." }
         require(context.isNotBlank() && context.length <= 6000 && Regex("[a-zA-Z0-9._:-]{1,100}").matches(model)) { "Check model name and context (1–6000 characters)." }
-        val instruction = "Return JSON only: {\"items\":[{\"title\":\"short title\",\"detail\":\"short practical explanation\"}]}. Suggest 3 to 8 ${if(kind=="steps") "small achievable task steps" else "paper journal spreads"}. Titles under 120 characters; explanations under 800. No markdown, links, commands or personal assumptions. The next message is user context."
+        val instruction = "Return JSON only: {\"items\":[{\"title\":\"short title\",\"detail\":\"short practical explanation\"}]}. Suggest 3 to 8 ${if(kind=="steps") "small achievable task steps" else "paper journal spreads"}. Titles under 120 characters; explanations under 800. No markdown, links, commands or personal assumptions. Write in $language. ${if(kind=="spreads") "In detail, provide a usable paper layout with named sections, positions and short example content." else ""} The next message is user context."
         val messages = JSONArray().put(JSONObject().put("role","system").put("content",instruction)).put(JSONObject().put("role","user").put("content",context))
-        val body = if (provider == "openai") JSONObject().put("model",model).put("store",false).put("instructions",instruction).put("input",context).put("max_output_tokens",2000).put("text",JSONObject().put("format",JSONObject().put("type","json_object"))) else JSONObject().put("model",model).put("messages",messages).put("max_tokens",2000).put("response_format",JSONObject().put("type","json_object"))
+        val body = if (provider == "openai") JSONObject().put("model",model).put("store",false).put("instructions",instruction).put("input",context).put("max_output_tokens",2000).put("text",JSONObject().put("format",JSONObject().put("type","json_object"))) else JSONObject().put("model",model).put("messages",messages).put("max_tokens",2000).put("thinking",JSONObject().put("type","disabled")).put("response_format",JSONObject().put("type","json_object"))
         if(canceled) error("Request canceled.")
         val conn = (URL(if(provider=="openai") "https://api.openai.com/v1/responses" else "https://api.deepseek.com/chat/completions").openConnection() as HttpsURLConnection)
         connection = conn
