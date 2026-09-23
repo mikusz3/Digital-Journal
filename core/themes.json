@@ -1,0 +1,10 @@
+{
+ "Light":{"background":"#ffffff","surface":"#f5f5f5","text":"#171717","accent":"#285943","bar":"#e8eee9"},
+ "Dark":{"background":"#181818","surface":"#282828","text":"#eeeeee","accent":"#86c5a5","bar":"#202020"},
+ "Matrix":{"background":"#040a04","surface":"#0b170b","text":"#92ff92","accent":"#40df60","bar":"#102810"},
+ "XP Luna-inspired":{"background":"#e8f0ff","surface":"#ffffff","text":"#173057","accent":"#245dba","bar":"#b6d2ff"},
+ "Frutiger Aero-inspired":{"background":"#d6f4fb","surface":"#f3fff9","text":"#154e63","accent":"#087895","bar":"#a9e4cf"},
+ "Win9x-inspired":{"background":"#008080","surface":"#c0c0c0","text":"#000000","accent":"#000080","bar":"#d4d0c8"},
+ "Discord-inspired":{"background":"#313338","surface":"#2b2d31","text":"#f2f3f5","accent":"#a6aaff","bar":"#232428"},
+ "Custom":{"background":"#f7f6f1","surface":"#fffefa","text":"#253b32","accent":"#244d40","bar":"#eff1e9"}
+}

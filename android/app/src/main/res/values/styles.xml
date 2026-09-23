@@ -1,0 +1,11 @@
+<resources>
+    <style name="AppTheme.Base" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:colorAccent">#244D40</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowBackground">#F7F6F1</item>
+    </style>
+    <style name="AppTheme" parent="AppTheme.Base" />
+    <string name="load_error">Your journals need attention\n\nSaved data could not be opened and has not been replaced.\n%1$s</string>
+</resources>

@@ -1,0 +1,8 @@
+[
+ {"id":"blank","name":"Blank","sections":[]},
+ {"id":"calendar","name":"Calendar with notes","sections":["Month and year","Calendar grid","Notes and reminders"]},
+ {"id":"tracker","name":"Tracker","sections":["What I want to track","Day 1–31","Observations"]},
+ {"id":"log","name":"Log","sections":["Date","Entry","Reflection"]},
+ {"id":"wishlist","name":"Wishlist","sections":["Item or experience","Why it matters","Notes"]},
+ {"id":"custom","name":"AI-assisted / custom","sections":["My layout","Notes"]}
+]

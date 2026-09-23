@@ -1,0 +1,332 @@
+[
+  {
+    "id": "main",
+    "spreads": [
+      {
+        "title": "Index",
+        "start": 1,
+        "end": 1
+      },
+      {
+        "title": "Wrzesień 2026",
+        "start": 2,
+        "end": 3
+      },
+      {
+        "title": "Październik 2026",
+        "start": 4,
+        "end": 5
+      },
+      {
+        "title": "Listopad 2026",
+        "start": 6,
+        "end": 7
+      },
+      {
+        "title": "Grudzień 2026",
+        "start": 8,
+        "end": 9
+      },
+      {
+        "title": "Styczeń 2027",
+        "start": 12,
+        "end": 13
+      },
+      {
+        "title": "Luty 2027",
+        "start": 14,
+        "end": 15
+      },
+      {
+        "title": "Marzec 2027",
+        "start": 16,
+        "end": 17
+      },
+      {
+        "title": "Kwiecień 2027",
+        "start": 18,
+        "end": 19
+      },
+      {
+        "title": "Maj 2027",
+        "start": 20,
+        "end": 21
+      },
+      {
+        "title": "Czerwiec 2027",
+        "start": 22,
+        "end": 23
+      },
+      {
+        "title": "Lipiec 2027",
+        "start": 24,
+        "end": 25
+      },
+      {
+        "title": "Sierpień 2027",
+        "start": 26,
+        "end": 27
+      },
+      {
+        "title": "Wrzesień 2027",
+        "start": 28,
+        "end": 29
+      },
+      {
+        "title": "Październik 2027",
+        "start": 30,
+        "end": 31
+      },
+      {
+        "title": "Listopad 2027",
+        "start": 32,
+        "end": 33
+      },
+      {
+        "title": "Grudzień 2027",
+        "start": 34,
+        "end": 35
+      },
+      {
+        "title": "Styczeń 2028",
+        "start": 38,
+        "end": 39
+      },
+      {
+        "title": "Luty 2028",
+        "start": 40,
+        "end": 41
+      },
+      {
+        "title": "Marzec 2028",
+        "start": 42,
+        "end": 43
+      },
+      {
+        "title": "Kwiecień 2028",
+        "start": 44,
+        "end": 45
+      },
+      {
+        "title": "Maj 2028",
+        "start": 46,
+        "end": 47
+      },
+      {
+        "title": "Czerwiec 2028",
+        "start": 48,
+        "end": 49
+      },
+      {
+        "title": "Lipiec 2028",
+        "start": 50,
+        "end": 51
+      },
+      {
+        "title": "Sierpień 2028",
+        "start": 52,
+        "end": 53
+      },
+      {
+        "title": "Wrzesień 2028",
+        "start": 54,
+        "end": 55
+      },
+      {
+        "title": "Październik 2028",
+        "start": 56,
+        "end": 57
+      },
+      {
+        "title": "Listopad 2028",
+        "start": 58,
+        "end": 59
+      },
+      {
+        "title": "Grudzień 2028",
+        "start": 60,
+        "end": 61
+      },
+      {
+        "title": "MOOD TRACKER",
+        "start": 64,
+        "end": 65
+      },
+      {
+        "title": "HABIT TRACKERS",
+        "start": 66,
+        "end": 77
+      },
+      {
+        "title": "NETFLIX LOG",
+        "start": 78,
+        "end": 79
+      },
+      {
+        "title": "ABOUT ME",
+        "start": 80,
+        "end": 81
+      },
+      {
+        "title": "GRATITUDE LOG",
+        "start": 82,
+        "end": 89
+      },
+      {
+        "title": "X-MAS & B-DAY WISHLISTS",
+        "start": 90,
+        "end": 95
+      },
+      {
+        "title": "MEDIA/CULTURE LOG",
+        "start": 96,
+        "end": 99
+      },
+      {
+        "title": "COMPUTER LOG",
+        "start": 100,
+        "end": 101
+      },
+      {
+        "title": "FUTURE LOG",
+        "start": 102,
+        "end": 109
+      },
+      {
+        "title": "AI PROJECTS LOG",
+        "start": 110,
+        "end": 121
+      },
+      {
+        "title": "STEAM LOG",
+        "start": 122,
+        "end": 131
+      },
+      {
+        "title": "NINTENDO SWITCH LOG",
+        "start": 132,
+        "end": 133
+      },
+      {
+        "title": "ANIMAL CROSSING: NEW HORIZONS ISLAND LOG",
+        "start": 134,
+        "end": 141
+      },
+      {
+        "title": "GAME BACKLOG",
+        "start": 142,
+        "end": 151
+      },
+      {
+        "title": "LIFE BUCKET LIST",
+        "start": 152,
+        "end": 155
+      },
+      {
+        "title": "PLACES I WANT TO VISIT",
+        "start": 156,
+        "end": 159
+      },
+      {
+        "title": "THINGS I WANT TO LEARN",
+        "start": 160,
+        "end": 163
+      },
+      {
+        "title": "BRAIN DUMP",
+        "start": 164,
+        "end": 181
+      },
+      {
+        "title": "DREAM LOG",
+        "start": 182,
+        "end": 185
+      },
+      {
+        "title": "LETTERS TO FUTURE ME",
+        "start": 186,
+        "end": 191
+      },
+      {
+        "title": "BEST OF 2026/2027/2028",
+        "start": 192,
+        "end": 195
+      },
+      {
+        "title": "TIME CAPSULE",
+        "start": 196,
+        "end": 199
+      },
+      {
+        "title": "THE END",
+        "start": 200,
+        "end": 200
+      }
+    ]
+  },
+  {
+    "id": "dlc",
+    "spreads": [
+      {
+        "title": "Index",
+        "start": 1,
+        "end": 1
+      },
+      {
+        "title": "FINANCIAL MANAGEMENT",
+        "start": 2,
+        "end": 9
+      },
+      {
+        "title": "ATTENTION SPAN AUDIT",
+        "start": 10,
+        "end": 11
+      },
+      {
+        "title": "STRESS LOG",
+        "start": 12,
+        "end": 19
+      },
+      {
+        "title": "PERSONAL DASHBOARD",
+        "start": 20,
+        "end": 23
+      },
+      {
+        "title": "IDEAL WEEK",
+        "start": 24,
+        "end": 25
+      },
+      {
+        "title": "PERSONAL WINS",
+        "start": 26,
+        "end": 27
+      },
+      {
+        "title": "MORNING ROUTINE",
+        "start": 28,
+        "end": 29
+      },
+      {
+        "title": "EVENING ROUTINE",
+        "start": 30,
+        "end": 31
+      },
+      {
+        "title": "BOREDOM MENU",
+        "start": 32,
+        "end": 33
+      },
+      {
+        "title": "HAPPINESS RECIPE",
+        "start": 34,
+        "end": 35
+      },
+      {
+        "title": "THE END",
+        "start": 200,
+        "end": 200
+      }
+    ]
+  }
+]

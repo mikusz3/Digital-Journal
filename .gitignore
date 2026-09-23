@@ -1,0 +1,30 @@
+node_modules/
+dist/
+.runtime/
+*.log
+android/.gradle/
+android/.kotlin/
+android/**/build/
+android/local.properties
+
+# Private source material, personal data and credentials
+*.docx
+docs/source-requirements.txt
+PROJECT_STATUS.md
+.env
+.env.*
+*.jks
+*.keystore
+*.p12
+credentials.json
+journals.json
+preferences.json
+*.pem
+*.key
+__pycache__/
+
+# Local checkout-specific launcher
+Digital Journal.desktop
+
+# IDE machine state
+.idea/

@@ -1,0 +1,7 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    { "label": "Digital Journal: run", "type": "shell", "command": "./launch.sh", "problemMatcher": [] },
+    { "label": "Digital Journal: test", "type": "shell", "command": "npm test", "group": "test", "problemMatcher": [] }
+  ]
+}

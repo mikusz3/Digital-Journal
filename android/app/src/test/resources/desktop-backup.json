@@ -1,0 +1,31 @@
+{
+  "format": "digital-bujo",
+  "backupVersion": 1,
+  "exportedAt": "2026-09-23T12:30:22.911Z",
+  "state": {
+    "version": 1,
+    "profiles": [
+      {
+        "id": "3b3c27ec-2f92-4ed3-907f-078167d30d3c",
+        "name": "Interop Łukasz",
+        "journals": [
+          {
+            "id": "9f49682e-2d6a-4c61-ac29-2d7317bf9174",
+            "title": "Papier 2029",
+            "pages": 96,
+            "format": "Custom",
+            "formatDetail": "15 × 21 cm",
+            "spreads": [
+              {
+                "title": "Wdzięczność",
+                "start": 2,
+                "end": 3,
+                "id": "f41e1e68-4249-496b-8ee2-cc583da99f62"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
