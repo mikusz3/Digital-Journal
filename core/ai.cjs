@@ -29,10 +29,10 @@ function parseSuggestions(provider, data) {
 function providerError(provider, status, raw = '') {
   let error; try { error = JSON.parse(raw).error; } catch {}
   // Classify known codes only. Never display raw provider messages, which may echo credentials or context.
-  const codes = [error?.code, error?.type];
+  const codes = [error?.code, error?.type, ...(Array.isArray(error?.details) ? error.details.map(d => d?.reason) : [])];
   let advice;
   if (status === 402 || codes.some(c => ['insufficient_quota','billing_hard_limit_reached','billing_not_active','usage_limit_reached','organization_usage_limit_exceeded'].includes(c))) advice = 'API credits or spending limit exhausted. Check billing and limits in your provider API account. A chat subscription does not supply API credits. Retrying will not fix billing.';
-  else if (status === 401) advice = 'API key rejected. Enter a valid key for this provider in Settings.';
+  else if (status === 401 || codes.includes('API_KEY_INVALID') || codes.includes('API_KEY_EXPIRED')) advice = 'API key rejected. Enter a valid key for this provider in Settings.';
   else if (status === 403) advice = 'Access denied. Check this key’s permissions, model access and supported region.';
   else if (provider === 'gemini' && status === 429) advice = 'Gemini request or daily quota reached. Check your project limits in Google AI Studio; wait for the indicated reset. Free-tier availability depends on your model and project. No automatic paid retry was made.';
   else if (status === 429) advice = 'Too many requests. Wait before trying again; check your provider rate limits.';

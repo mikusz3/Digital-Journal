@@ -86,6 +86,7 @@ test('Gemini sends a header-only key, structured context and validates responses
   assert.throws(()=>parseSuggestions('gemini',{candidates:[{finishReason:'MAX_TOKENS'}]}),/incomplete/);
   assert.throws(()=>parseSuggestions('gemini',{candidates:[{finishReason:'STOP',content:{parts:[{text:'not JSON'}]}}]}));
   assert.match(providerError('gemini',429),/daily quota/);
+  assert.match(providerError('gemini',400,JSON.stringify({error:{details:[{reason:'API_KEY_INVALID'}]}})),/API key rejected/);
   assert.throws(()=>request({provider:'gemini',kind:'steps',context:'test',model:'../../host?key=bad'}));
 });
 test('Gemini credentials are isolated, encrypted and removable',t=>{

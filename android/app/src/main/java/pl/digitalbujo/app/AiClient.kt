@@ -71,11 +71,12 @@ class AiClient {
 
         fun providerError(provider: String, status: Int, raw: String = ""): String {
             val error = runCatching { JSONObject(raw).optJSONObject("error") }.getOrNull()
-            val codes = listOf(error?.optString("code"), error?.optString("type"))
+            val details = error?.optJSONArray("details")
+            val codes = listOf(error?.optString("code"), error?.optString("type")) + (0 until (details?.length() ?: 0)).map { details?.optJSONObject(it)?.optString("reason") }
             // Never display raw error messages: providers may echo keys or user context.
             val advice = when {
                 status == 402 || codes.any { it in listOf("insufficient_quota","billing_hard_limit_reached","billing_not_active","usage_limit_reached","organization_usage_limit_exceeded") } -> "API credits or spending limit exhausted. Check billing and limits in your provider API account. A chat subscription does not supply API credits. Retrying will not fix billing."
-                status == 401 -> "API key rejected. Enter a valid key for this provider in Settings."
+                status == 401 || "API_KEY_INVALID" in codes || "API_KEY_EXPIRED" in codes -> "API key rejected. Enter a valid key for this provider in Settings."
                 status == 403 -> "Access denied. Check this key’s permissions, model access and supported region."
                 provider == "gemini" && status == 429 -> "Gemini request or daily quota reached. Check your project limits in Google AI Studio; wait for the indicated reset. Free-tier availability depends on your model and project. No automatic paid retry was made."
                 status == 429 -> "Too many requests. Wait before trying again; check your provider rate limits."

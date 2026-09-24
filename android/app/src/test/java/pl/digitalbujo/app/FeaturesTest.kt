@@ -19,6 +19,7 @@ class FeaturesTest {
         reply.getJSONArray("candidates").getJSONObject(0).put("finishReason","MAX_TOKENS")
         assertThrows(IllegalArgumentException::class.java){AiClient.parse("gemini",reply)}
         assertTrue(AiClient.providerError("gemini",429).contains("daily quota"))
+        assertTrue(AiClient.providerError("gemini",400,"""{"error":{"details":[{"reason":"API_KEY_INVALID"}]}}""").contains("API key rejected"))
     }
 
     @Test fun providerErrorsAreActionableAndDoNotEchoSecrets() {
