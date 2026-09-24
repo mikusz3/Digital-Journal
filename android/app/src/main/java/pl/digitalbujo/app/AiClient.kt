@@ -52,13 +52,30 @@ class AiClient {
             conn.connectTimeout=15000; conn.readTimeout=60000; conn.instanceFollowRedirects=false; conn.requestMethod="POST"; conn.doOutput=true
             conn.setRequestProperty("Content-Type","application/json"); conn.setRequestProperty("Authorization","Bearer $key")
             conn.outputStream.use { it.write(body.toString().toByteArray(Charsets.UTF_8)) }
-            require(conn.responseCode in 200..299) { "Provider returned HTTP ${conn.responseCode}. Check your key, model access and quota." }
-            val bytes = conn.inputStream.use { stream -> val output=java.io.ByteArrayOutputStream(); val buffer=ByteArray(4096); while(true) { val n=stream.read(buffer); if(n<0) break; require(output.size()+n <= 128000) { "Provider response too large." }; output.write(buffer,0,n) }; output.toByteArray() }
+            val status = conn.responseCode
+            val bytes = (if(status in 200..299) conn.inputStream else conn.errorStream)?.use { stream -> val output=java.io.ByteArrayOutputStream(); val buffer=ByteArray(4096); while(true) { val n=stream.read(buffer); if(n<0) break; require(output.size()+n <= 128000) { "Provider response too large." }; output.write(buffer,0,n) }; output.toByteArray() } ?: ByteArray(0)
             if(canceled) error("Request canceled.")
+            if(status !in 200..299) error(providerError(provider,status,String(bytes,Charsets.UTF_8)))
             return parse(provider,JSONObject(String(bytes,Charsets.UTF_8)))
         } finally { conn.disconnect(); connection=null }
     }
     companion object {
+        fun providerError(provider: String, status: Int, raw: String = ""): String {
+            val error = runCatching { JSONObject(raw).optJSONObject("error") }.getOrNull()
+            val codes = listOf(error?.optString("code"), error?.optString("type"))
+            // Never display raw error messages: providers may echo keys or user context.
+            val advice = when {
+                status == 402 || codes.any { it in listOf("insufficient_quota","billing_hard_limit_reached","billing_not_active","usage_limit_reached","organization_usage_limit_exceeded") } -> "API credits or spending limit exhausted. Check billing and limits in your provider API account. A chat subscription does not supply API credits. Retrying will not fix billing."
+                status == 401 -> "API key rejected. Enter a valid key for this provider in Settings."
+                status == 403 -> "Access denied. Check this key’s permissions, model access and supported region."
+                status == 429 -> "Too many requests. Wait before trying again; check your provider rate limits."
+                status == 404 || "model_not_found" in codes -> "Model unavailable. Check the model name in Settings and access for this API account."
+                status == 400 || status == 422 -> "Request rejected. Check the model name and whether it supports JSON suggestions. Try the default model."
+                status >= 500 -> "Provider temporarily unavailable. Try again later."
+                else -> "Unexpected provider response. Report this HTTP number and provider name; never share your API key."
+            }
+            return "${if(provider == "deepseek") "DeepSeek" else "OpenAI"} HTTP $status. $advice Nothing was changed."
+        }
         fun parse(provider: String, data: JSONObject): List<JSONObject> {
             val text = if(provider=="openai") {
                 require(data.optString("status")=="completed") { "Provider did not finish. Nothing was changed." }

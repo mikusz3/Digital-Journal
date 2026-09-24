@@ -7,6 +7,16 @@ import com.google.zxing.*
 import com.google.zxing.common.HybridBinarizer
 import com.google.zxing.qrcode.QRCodeWriter
 class FeaturesTest {
+    @Test fun providerErrorsAreActionableAndDoNotEchoSecrets() {
+        assertTrue(AiClient.providerError("deepseek",402).contains("credits"))
+        val raw = """{"error":{"type":"insufficient_quota","message":"secret-key-private-context"}}"""
+        assertTrue(AiClient.providerError("openai",429,raw).contains("credits"))
+        assertFalse(AiClient.providerError("openai",429,raw).contains("secret-key"))
+        assertTrue(AiClient.providerError("openai",429,"{}").contains("Too many requests"))
+        assertTrue(AiClient.providerError("deepseek",420,"<html>secret</html>").contains("HTTP 420"))
+        assertTrue(AiClient.providerError("openai",404).contains("Model unavailable"))
+    }
+
     @Test fun tasksMigrateRoundTripAndRegenerateIdentifiers() {
         val state=JournalData.validate(JSONObject("""{"version":1,"profiles":[{"id":"legacy","name":"Old profile","journals":[]}]}"""))
         assertEquals(2,state.getInt("version"));val p=JournalData.profiles(state).single()

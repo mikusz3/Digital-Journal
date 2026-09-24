@@ -21,16 +21,31 @@ function parseSuggestions(provider, data) {
     return { title: item.title.trim(), detail: item.detail.trim() };
   });
 }
+function providerError(provider, status, raw = '') {
+  let error; try { error = JSON.parse(raw).error; } catch {}
+  // Classify known codes only. Never display raw provider messages, which may echo credentials or context.
+  const codes = [error?.code, error?.type];
+  let advice;
+  if (status === 402 || codes.some(c => ['insufficient_quota','billing_hard_limit_reached','billing_not_active','usage_limit_reached','organization_usage_limit_exceeded'].includes(c))) advice = 'API credits or spending limit exhausted. Check billing and limits in your provider API account. A chat subscription does not supply API credits. Retrying will not fix billing.';
+  else if (status === 401) advice = 'API key rejected. Enter a valid key for this provider in Settings.';
+  else if (status === 403) advice = 'Access denied. Check this key’s permissions, model access and supported region.';
+  else if (status === 429) advice = 'Too many requests. Wait before trying again; check your provider rate limits.';
+  else if (status === 404 || codes.includes('model_not_found')) advice = 'Model unavailable. Check the model name in Settings and access for this API account.';
+  else if (status === 400 || status === 422) advice = 'Request rejected. Check the model name and whether it supports JSON suggestions. Try the default model.';
+  else if (status >= 500) advice = 'Provider temporarily unavailable. Try again later.';
+  else advice = 'Unexpected provider response. Report this HTTP number and provider name; never share your API key.';
+  return `${provider === 'deepseek' ? 'DeepSeek' : 'OpenAI'} HTTP ${status}. ${advice} Nothing was changed.`;
+}
 async function generate(input, key, signal, transport = fetch) {
   const spec = request(input);
   if (!key) throw new Error('Add your API key in Settings first.');
   let response;
   try { response = await transport(spec.url, { method: 'POST', redirect: 'error', headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' }, body: JSON.stringify(spec.body), signal }); }
   catch { throw new Error(signal?.aborted ? 'Request canceled or timed out. Nothing was changed.' : 'Could not reach the provider. Check your connection.'); }
-  if (!response.ok) throw new Error(`Provider returned HTTP ${response.status}. ${[401,403].includes(response.status) ? 'Check your API key and model access.' : response.status === 429 ? 'Check your provider quota or try later.' : 'Check the model name or try again later.'}`);
   let raw = ''; const decoder = new TextDecoder(); const reader = response.body.getReader();
   try { for (;;) { const { done, value } = await reader.read(); if (done) break; raw += decoder.decode(value, { stream: true }); if (raw.length > 128000) throw new Error('Provider response too large.'); } }
   finally { await reader.cancel(); }
+  if (!response.ok) throw new Error(providerError(input.provider, response.status, raw));
   try { return parseSuggestions(input.provider, JSON.parse(raw + decoder.decode())); } catch { throw new Error('The provider returned unusable or incomplete suggestions. Nothing was changed.'); }
 }
-module.exports = { providers, request, parseSuggestions, generate };
+module.exports = { providers, request, parseSuggestions, generate, providerError };

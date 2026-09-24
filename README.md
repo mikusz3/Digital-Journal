@@ -73,3 +73,9 @@ Private development prompts, device screenshots, signing keys, API keys and pers
 ### Planned Apple platforms
 
 The [macOS and iOS roadmap](docs/APPLE_ROADMAP.md) covers reuse of the desktop app, an iPhone XR-compatible companion, signing, and testing without an owned Mac. Apple builds are not included in this release.
+
+### AI billing and service errors
+
+Version 0.3.1 distinguishes billing, invalid keys, model access, rate limits and temporary provider failures without displaying raw provider messages or credentials. **DeepSeek HTTP 402 means insufficient API balance**: check your DeepSeek API account balance. OpenAI can report exhausted API credits or spending limits as HTTP 429 with `insufficient_quota`; a plain rate-limit 429 means wait before retrying. API billing is separate from chat subscriptions. An app update cannot add credits or bypass account limits. No automatic paid retries are made.
+
+References: [DeepSeek errors](https://api-docs.deepseek.com/quick_start/error_codes/), [OpenAI 429 troubleshooting](https://help.openai.com/en/articles/5955604).

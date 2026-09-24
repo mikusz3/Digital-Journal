@@ -58,3 +58,14 @@ test('all requested locales contain the same supported interface keys',()=>{
   const {languages,messages}=require('../core/locales.json');assert.deepEqual(Object.keys(languages).sort(),['en','pl','de','es','es-419','ja','ru','uk','fr'].sort());
   for(const code of Object.keys(languages)){assert.deepEqual(Object.keys(messages[code]).sort(),Object.keys(messages.en).sort());for(const value of Object.values(messages[code]))assert.ok(value.length);}
 });
+test('AI errors distinguish billing from rate limits without leaking provider echoes', async () => {
+  const {providerError}=require('../core/ai.cjs');
+  assert.match(providerError('deepseek',402),/credits/);
+  assert.match(providerError('openai',429,JSON.stringify({error:{type:'insufficient_quota',message:'secret-key-and-private-context'}})),/credits/);
+  assert.match(providerError('openai',429,'{}'),/Too many requests/);
+  assert.match(providerError('openai',404),/Model unavailable/);
+  assert.match(providerError('deepseek',503),/temporarily unavailable/);
+  assert.match(providerError('deepseek',420,'<html>secret-key</html>'),/HTTP 420/);
+  assert.doesNotMatch(providerError('openai',401,JSON.stringify({error:{message:'secret-key'}})),/secret-key/);
+  await assert.rejects(generate({provider:'deepseek',kind:'steps',context:'Plan'},'fake-key',undefined,async()=>new Response(JSON.stringify({error:{type:'insufficient_quota'}}),{status:429})),/credits/);
+});

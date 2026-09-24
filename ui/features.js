@@ -33,7 +33,7 @@ function apiSettings() {
   provider.onchange = status; status();
   dialog.querySelector('#remove-key').onclick = async () => { try { preferences = (await call('setKey', { provider: provider.value, key: '', remember: false })).preferences; status(); } catch (e) { dialog.querySelector('.error').textContent = e.message; } };
 }
-function about() { showForm('About Digital Journal', credits, '<p class="field-help">Version 0.3.0 · Local journals, optional online AI. Source: github.com/mikusz3/Digital-Journal</p><p class="field-help">Compatibility: Android can generate and scan QR links. Reading-app integration and printer support are documented investigations; collections and printing are scheduled for later.</p>' + formFooter('Close'), async () => dialog.close()); }
+function about() { showForm('About Digital Journal', credits, '<p class="field-help">Version 0.3.1 · Local journals, optional online AI. Source: github.com/mikusz3/Digital-Journal</p><p class="field-help">Compatibility: Android can generate and scan QR links. Reading-app integration and printer support are documented investigations; collections and printing are scheduled for later.</p>' + formFooter('Close'), async () => dialog.close()); }
 function celebrate() {
   if (preferences.reduceMotion || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const burst = document.createElement('div'); burst.className = 'confetti'; burst.setAttribute('aria-hidden','true');
