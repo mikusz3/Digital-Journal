@@ -138,8 +138,9 @@ class CompanionActivity : Activity() {
     }
     private fun keys() {
         root("AI provider keys");text(body,I18n.t(this,"Your account may incur API charges. Keys are encrypted with Android Keystore and excluded from journal backups."))
+        text(body,I18n.t(this,"Gemini: create a key at aistudio.google.com. Check your project’s free quota, pricing and data terms before sending personal notes."),13f)
         val vault=KeyVault(this);val status=text(body,I18n.t(this,""))
-        select(body,"Provider",listOf("openai","deepseek"),selectedProvider){selectedProvider=it;status.text=if(vault.has(it))"A key is configured." else "No key configured."}
+        select(body,"Provider",listOf("openai","deepseek","gemini"),selectedProvider){selectedProvider=it;status.text=if(vault.has(it))"A key is configured." else "No key configured."}
         input(body,"key","New API key",max=512).apply {inputType=InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD;isSaveEnabled=false;setAutofillHints(View.AUTOFILL_HINT_PASSWORD)}
         button(body,I18n.t(this,"Save key securely")) {val key=value("key");require(key.isNotEmpty()){ "Enter an API key." };vault.save(selectedProvider,key);fields["key"]?.setText("");toast("Key saved.");render()}
         button(body,I18n.t(this,"Remove selected provider key")) {vault.save(selectedProvider,"");render()}
@@ -148,8 +149,8 @@ class CompanionActivity : Activity() {
     private fun ai() {
         root(if(aiKind=="steps")"AI task breakdown" else "AI spread ideas")
         text(body,I18n.t(this,"Only the text below is sent when you press Generate. Your selected provider may charge your account. Suggestions need your review before saving."))
-        select(body,"Provider",listOf("openai","deepseek"),selectedProvider){ if(it!=selectedProvider){selectedProvider=it;fields["model"]?.setText(if(it=="openai")"gpt-4.1-mini" else "deepseek-flash")} }
-        input(body,"model","Model",if(selectedProvider=="openai")"gpt-4.1-mini" else "deepseek-flash",max=100)
+        select(body,"Provider",listOf("openai","deepseek","gemini"),selectedProvider){ if(it!=selectedProvider){selectedProvider=it;fields["model"]?.setText(AiClient.defaultModel(it))} }
+        input(body,"model","Model",AiClient.defaultModel(selectedProvider),max=100)
         val initial=if(aiKind=="steps") TaskData.tasks(profile()).find {it.getString("id")==taskId}?.let {it.getString("title")+"\n"+it.getString("notes")} ?: "" else intent.getStringExtra("context") ?: "Suggest paper journal spreads. My interests: "
         input(body,"context","Text to send",initial,true,6000)
         val status=text(body,I18n.t(this,""))
@@ -216,7 +217,7 @@ class CompanionActivity : Activity() {
         root("About Digital Journal")
         text(body,I18n.t(this,"Digital Journal is an independent, fan-made application developed for personal use and offered without profit. The Bullet Journal method was created by Ryder Carroll. Bullet Journal® and BuJo® are trademarks of Lightcage, LLC. This project is not affiliated with, sponsored by, or endorsed by Ryder Carroll or Lightcage, LLC."))
         button(body,I18n.t(this,"Original method: bulletjournal.com")) {startActivity(Intent(Intent.ACTION_VIEW,Uri.parse("https://bulletjournal.com")))}
-        text(body,I18n.t(this,"Version 0.3.1 · Source: github.com/mikusz3/Digital-Journal. Themes are original visual interpretations; no third-party artwork is bundled. QR support uses ZXing and JourneyApps (Apache-2.0)."))
+        text(body,I18n.t(this,"Version 0.3.2 · Source: github.com/mikusz3/Digital-Journal. Themes are original visual interpretations; no third-party artwork is bundled. QR support uses ZXing and JourneyApps (Apache-2.0)."))
         button(body,I18n.t(this,"Open-source licenses")) { val content=TextView(this).apply {text=assets.open("notices.txt").bufferedReader().use {it.readText()};setPadding(dp(16),dp(16),dp(16),dp(16))};AlertDialog.Builder(this).setTitle(I18n.t(this@CompanionActivity,"Open-source licenses")).setView(ScrollView(this).apply {addView(content)}).setPositiveButton(I18n.t(this@CompanionActivity,"Close"),null).show() }
         text(body,I18n.t(this,"Compatibility investigations"),22f);text(body,I18n.t(this,"Cover to Cover Club and Xiaomi Home can be opened below when installed. No reading data is imported and no printer connection is claimed. Collection and printing features are planned for later."))
         for((label,pkg) in listOf("Cover to Cover Club" to "com.quillguild.covertocoverclub","Xiaomi Home" to "com.xiaomi.smarthome")) button(body,"Open $label") {val launch=packageManager.getLaunchIntentForPackage(pkg) ?: error("$label is not installed on this device.");startActivity(launch)}

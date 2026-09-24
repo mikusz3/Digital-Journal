@@ -69,3 +69,30 @@ test('AI errors distinguish billing from rate limits without leaking provider ec
   assert.doesNotMatch(providerError('openai',401,JSON.stringify({error:{message:'secret-key'}})),/secret-key/);
   await assert.rejects(generate({provider:'deepseek',kind:'steps',context:'Plan'},'fake-key',undefined,async()=>new Response(JSON.stringify({error:{type:'insufficient_quota'}}),{status:429})),/credits/);
 });
+test('Gemini sends a header-only key, structured context and validates responses', async () => {
+  const {providerError}=require('../core/ai.cjs');
+  const items=[{title:'Weekly calendar',detail:'Leave a notes column.'}];
+  const reply={candidates:[{finishReason:'STOP',content:{parts:[{thought:true,text:'private reasoning'},{text:JSON.stringify({items})}]}}]};
+  for(const kind of ['steps','spreads']) {
+    let sent;
+    assert.deepEqual(await generate({provider:'gemini',kind,context:'My plan',language:'pl'},'gemini-test-key',undefined,async(url,options)=>{sent={url,options};return new Response(JSON.stringify(reply));}),items);
+    assert.equal(sent.url,'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent');
+    assert.equal(sent.options.headers['x-goog-api-key'],'gemini-test-key');assert.equal(sent.options.headers.Authorization,undefined);
+    assert.equal(sent.options.redirect,'error');assert.ok(!sent.url.includes('gemini-test-key'));
+    const body=JSON.parse(sent.options.body);assert.equal(body.contents[0].parts[0].text,'My plan');assert.equal(body.generationConfig.responseFormat.text.mimeType,'application/json');
+    assert.ok(!sent.options.body.includes('gemini-test-key'));
+  }
+  assert.throws(()=>parseSuggestions('gemini',{promptFeedback:{blockReason:'SAFETY'}}),/blocked/);
+  assert.throws(()=>parseSuggestions('gemini',{candidates:[{finishReason:'MAX_TOKENS'}]}),/incomplete/);
+  assert.throws(()=>parseSuggestions('gemini',{candidates:[{finishReason:'STOP',content:{parts:[{text:'not JSON'}]}}]}));
+  assert.match(providerError('gemini',429),/daily quota/);
+  assert.throws(()=>request({provider:'gemini',kind:'steps',context:'test',model:'../../host?key=bad'}));
+});
+test('Gemini credentials are isolated, encrypted and removable',t=>{
+  const s=store(t);const {Preferences}=require('../desktop/preferences.cjs');
+  const safe={isEncryptionAvailable:()=>true,getSelectedStorageBackend:()=> 'gnome_libsecret',encryptString:s=>Buffer.from('encrypted:'+s),decryptString:b=>b.toString().slice(10)};
+  const p=new Preferences(path.dirname(s.file),safe);p.setKey({provider:'openai',key:'other-key',remember:false});p.setKey({provider:'gemini',key:'gemini-fixture',remember:true});
+  assert.equal(p.read().keys.gemini,true);assert.equal(p.key('gemini'),'gemini-fixture');assert.ok(!JSON.stringify(p.read()).includes('gemini-fixture'));
+  assert.ok(!fs.readFileSync(p.vault,'utf8').includes('gemini-fixture'));
+  p.setKey({provider:'gemini',key:'',remember:false});assert.equal(p.read().keys.gemini,false);assert.equal(p.key('openai'),'other-key');
+});

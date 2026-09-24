@@ -6,7 +6,7 @@ class Preferences {
   constructor(directory, safeStorage) { this.file = path.join(directory, 'preferences.json'); this.vault = path.join(directory, 'credentials.json'); this.safe = safeStorage; this.sessionKeys = {}; this.data = {}; this.encrypted = {}; for (const [file, name] of [[this.file,'data'],[this.vault,'encrypted']]) { if (fs.existsSync(file)) { try { this[name] = JSON.parse(fs.readFileSync(file, 'utf8')); } catch { throw new Error('Settings could not be read. Restore preferences.json or credentials.json before continuing.'); } } } }
   secure() { return this.safe.isEncryptionAvailable() && (process.platform !== 'linux' || this.safe.getSelectedStorageBackend() !== 'basic_text'); }
   write(file, data) { fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file + '.tmp', JSON.stringify(data), { mode: 0o600 }); fs.renameSync(file + '.tmp', file); }
-  read() { return { ...this.data, themes, locales, secure: this.secure(), keys: Object.fromEntries(['openai','deepseek'].map(p => [p, !!this.sessionKeys[p] || !!this.encrypted[p]])) }; }
+  read() { return { ...this.data, themes, locales, secure: this.secure(), keys: Object.fromEntries(['openai','deepseek','gemini'].map(p => [p, !!this.sessionKeys[p] || !!this.encrypted[p]])) }; }
   save(input) {
     if (input.language && !locales.languages[input.language]) throw new Error('Unknown language.');
     if (!themes[input.theme]) throw new Error('Unknown theme.');
@@ -18,7 +18,7 @@ class Preferences {
   }
   key(provider) { if (this.sessionKeys[provider]) return this.sessionKeys[provider]; if (!this.encrypted[provider]) return ''; try { return this.safe.decryptString(Buffer.from(this.encrypted[provider], 'base64')); } catch { throw new Error('Saved key is unavailable. Enter it again in Settings.'); } }
   setKey({provider,key,remember}) {
-    if (!['openai','deepseek'].includes(provider) || typeof key !== 'string' || key.length > 512 || /[\s\x00-\x1f]/.test(key)) throw new Error('Invalid API key.');
+    if (!['openai','deepseek','gemini'].includes(provider) || typeof key !== 'string' || key.length > 512 || /[\s\x00-\x1f]/.test(key)) throw new Error('Invalid API key.');
     if (remember && key && !this.secure()) throw new Error('Secure key storage is unavailable. Use this session only.');
     delete this.encrypted[provider]; delete this.sessionKeys[provider];
     if (key) { if (remember) this.encrypted[provider] = this.safe.encryptString(key).toString('base64'); else this.sessionKeys[provider] = key; }

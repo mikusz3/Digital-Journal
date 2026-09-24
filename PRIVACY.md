@@ -4,9 +4,10 @@ Profiles, journals and tasks are stored on your device. There is no project-oper
 
 Backups are user-selected, plain-text JSON files. Export includes every profile, journal, spread and task. API credentials, settings and wallpapers are never exported. Imports create separate copies. Deleting a profile removes its locally stored content, but cannot delete backup files you exported elsewhere.
 
-Optional AI sends exactly the context shown in the form to the selected OpenAI or DeepSeek API, along with your chosen model and a request for journal suggestions. It sends your API key only to that provider as an HTTPS authentication header. Keys are never written to application logs. Provider handling and billing are governed by their own policies:
+Optional AI sends exactly the context shown in the form to the selected OpenAI, DeepSeek or Google Gemini API, along with your chosen model and a request for journal suggestions. It sends your API key only to that provider as an HTTPS authentication header. Keys are never written to application logs. Provider handling and billing are governed by their own policies:
 
 - [OpenAI API data controls](https://developers.openai.com/api/docs/guides/your-data)
+- [Google Gemini API terms and data handling](https://ai.google.dev/gemini-api/terms)
 - [DeepSeek privacy policy](https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy.html)
 
 OpenAI requests disable response storage (`store: false`). This does not promise zero retention by the provider. AI suggestions are never applied without your review.
@@ -14,3 +15,5 @@ OpenAI requests disable response storage (`store: false`). This does not promise
 Android camera access is used by the offline QR scanner. Camera images are not sent to AI or project servers. A decoded web link opens externally only after confirmation. Other apps and websites have their own privacy policies.
 
 Credentials are encrypted using Android Keystore or the desktop OS secret store. On desktop systems without a suitable secure store, credentials can be retained in memory for the current session only. Android OS backup and device-transfer backup are disabled for the app; use the explicit JSON backup feature.
+
+Gemini authentication uses the `x-goog-api-key` header, never a URL query parameter. Its unpaid-service data handling can include product improvement and human review; regional exceptions apply, including EEA/UK/Switzerland. Consult the linked Google terms before sending personal notes. The app does not automatically enable paid service or send the rest of your journal.

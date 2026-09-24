@@ -250,7 +250,8 @@
       "A quiet companion for the pages you put pen to. Keep track of your paper journals and leave room for whatever comes next.": "A quiet companion for the pages you put pen to. Keep track of your paper journals and leave room for whatever comes next.",
       "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.": "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.",
       "Month / Year · Start the grid on the weekday that fits your month.": "Month / Year · Start the grid on the weekday that fits your month.",
-      "Camera access was denied. QR generation is still available.": "Camera access was denied. QR generation is still available."
+      "Camera access was denied. QR generation is still available.": "Camera access was denied. QR generation is still available.",
+      "Gemini: create a key at aistudio.google.com. Check your project’s free quota, pricing and data terms before sending personal notes.": "Gemini: create a key at aistudio.google.com. Check your project’s free quota, pricing and data terms before sending personal notes."
     },
     "pl": {
       "Settings": "Ustawienia",
@@ -491,7 +492,8 @@
       "A quiet companion for the pages you put pen to. Keep track of your paper journals and leave room for whatever comes next.": "Spokojny towarzysz papierowych stron. Bez serii do utrzymania i nadrabiania zaległości.",
       "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.": "Zacznij od notesu obok Ciebie. Dodaj indeks stron wtedy, gdy masz ochotę.",
       "Month / Year · Start the grid on the weekday that fits your month.": "Miesiąc / Rok",
-      "Camera access was denied. QR generation is still available.": "Odmówiono dostępu do aparatu. Nadal możesz generować kody QR."
+      "Camera access was denied. QR generation is still available.": "Odmówiono dostępu do aparatu. Nadal możesz generować kody QR.",
+      "Gemini: create a key at aistudio.google.com. Check your project’s free quota, pricing and data terms before sending personal notes.": "Gemini: utwórz klucz na aistudio.google.com. Przed wysłaniem osobistych notatek sprawdź bezpłatny limit projektu, ceny i zasady przetwarzania danych."
     },
     "de": {
       "Settings": "Einstellungen",
@@ -732,7 +734,8 @@
       "A quiet companion for the pages you put pen to. Keep track of your paper journals and leave room for whatever comes next.": "Ein ruhiger Begleiter für deine Papierseiten. Keine Serien, kein Nachholen.",
       "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.": "Beginne mit dem Notizbuch neben dir. Ergänze das Verzeichnis, wann du möchtest.",
       "Month / Year · Start the grid on the weekday that fits your month.": "Monat / Jahr",
-      "Camera access was denied. QR generation is still available.": "Kamerazugriff abgelehnt. QR-Codes können weiterhin erstellt werden."
+      "Camera access was denied. QR generation is still available.": "Kamerazugriff abgelehnt. QR-Codes können weiterhin erstellt werden.",
+      "Gemini: create a key at aistudio.google.com. Check your project’s free quota, pricing and data terms before sending personal notes.": "Gemini: Erstelle einen Schlüssel auf aistudio.google.com. Prüfe das kostenlose Kontingent, die Preise und die Datenbedingungen deines Projekts, bevor du persönliche Notizen sendest."
     },
     "es": {
       "Settings": "Ajustes",
@@ -973,7 +976,8 @@
       "A quiet companion for the pages you put pen to. Keep track of your paper journals and leave room for whatever comes next.": "Un compañero tranquilo para tus páginas. Sin rachas ni nada que recuperar.",
       "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.": "Empieza con el cuaderno que tienes al lado. Añade su índice cuando quieras.",
       "Month / Year · Start the grid on the weekday that fits your month.": "Mes / Año",
-      "Camera access was denied. QR generation is still available.": "Se ha denegado el acceso a la cámara. Puedes seguir generando códigos QR."
+      "Camera access was denied. QR generation is still available.": "Se ha denegado el acceso a la cámara. Puedes seguir generando códigos QR.",
+      "Gemini: create a key at aistudio.google.com. Check your project’s free quota, pricing and data terms before sending personal notes.": "Gemini: crea una clave en aistudio.google.com. Consulta la cuota gratuita, los precios y las condiciones de datos de tu proyecto antes de enviar notas personales."
     },
     "es-419": {
       "Settings": "Configuración",
@@ -1214,7 +1218,8 @@
       "A quiet companion for the pages you put pen to. Keep track of your paper journals and leave room for whatever comes next.": "Un compañero tranquilo para tus páginas. Sin rachas ni nada que recuperar.",
       "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.": "Empieza con el cuaderno que tienes al lado. Agrega su índice cuando quieras.",
       "Month / Year · Start the grid on the weekday that fits your month.": "Mes / Año",
-      "Camera access was denied. QR generation is still available.": "Se denegó el acceso a la cámara. Puedes seguir generando códigos QR."
+      "Camera access was denied. QR generation is still available.": "Se denegó el acceso a la cámara. Puedes seguir generando códigos QR.",
+      "Gemini: create a key at aistudio.google.com. Check your project’s free quota, pricing and data terms before sending personal notes.": "Gemini: crea una clave en aistudio.google.com. Revisa la cuota gratuita, los precios y las condiciones de datos de tu proyecto antes de enviar notas personales."
     },
     "ja": {
       "Settings": "設定",
@@ -1455,7 +1460,8 @@
       "A quiet companion for the pages you put pen to. Keep track of your paper journals and leave room for whatever comes next.": "紙のページの静かな相棒。連続記録や遅れを取り戻す必要はありません。",
       "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.": "手元のノートから始めましょう。好きなときにインデックスを追加できます。",
       "Month / Year · Start the grid on the weekday that fits your month.": "月・年",
-      "Camera access was denied. QR generation is still available.": "カメラへのアクセスが拒否されました。QRコードの生成は引き続き使えます。"
+      "Camera access was denied. QR generation is still available.": "カメラへのアクセスが拒否されました。QRコードの生成は引き続き使えます。",
+      "Gemini: create a key at aistudio.google.com. Check your project’s free quota, pricing and data terms before sending personal notes.": "Gemini: aistudio.google.com でキーを作成できます。個人的なメモを送信する前に、プロジェクトの無料枠、料金、データ利用条件を確認してください。"
     },
     "ru": {
       "Settings": "Настройки",
@@ -1696,7 +1702,8 @@
       "A quiet companion for the pages you put pen to. Keep track of your paper journals and leave room for whatever comes next.": "Спокойный помощник для бумажных страниц. Без серий и необходимости наверстывать.",
       "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.": "Начните с блокнота рядом. Добавьте указатель страниц, когда захотите.",
       "Month / Year · Start the grid on the weekday that fits your month.": "Месяц / Год",
-      "Camera access was denied. QR generation is still available.": "Доступ к камере запрещён. Создание QR-кодов по-прежнему доступно."
+      "Camera access was denied. QR generation is still available.": "Доступ к камере запрещён. Создание QR-кодов по-прежнему доступно.",
+      "Gemini: create a key at aistudio.google.com. Check your project’s free quota, pricing and data terms before sending personal notes.": "Gemini: создайте ключ на aistudio.google.com. Перед отправкой личных заметок проверьте бесплатную квоту проекта, цены и условия обработки данных."
     },
     "uk": {
       "Settings": "Налаштування",
@@ -1937,7 +1944,8 @@
       "A quiet companion for the pages you put pen to. Keep track of your paper journals and leave room for whatever comes next.": "Спокійний помічник для паперових сторінок. Без серій і потреби надолужувати.",
       "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.": "Почніть із записника поруч. Додайте зміст сторінок, коли захочете.",
       "Month / Year · Start the grid on the weekday that fits your month.": "Місяць / Рік",
-      "Camera access was denied. QR generation is still available.": "Доступ до камери заборонено. Створення QR-кодів і далі доступне."
+      "Camera access was denied. QR generation is still available.": "Доступ до камери заборонено. Створення QR-кодів і далі доступне.",
+      "Gemini: create a key at aistudio.google.com. Check your project’s free quota, pricing and data terms before sending personal notes.": "Gemini: створіть ключ на aistudio.google.com. Перед надсиланням особистих нотаток перевірте безкоштовну квоту проєкту, ціни та умови обробки даних."
     },
     "fr": {
       "Settings": "Paramètres",
@@ -2178,7 +2186,8 @@
       "A quiet companion for the pages you put pen to. Keep track of your paper journals and leave room for whatever comes next.": "Un compagnon paisible pour vos pages. Aucune série à maintenir, rien à rattraper.",
       "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.": "Commencez par le carnet à côté de vous. Ajoutez son index quand vous le souhaitez.",
       "Month / Year · Start the grid on the weekday that fits your month.": "Mois / Année",
-      "Camera access was denied. QR generation is still available.": "L’accès à la caméra a été refusé. La génération de codes QR reste disponible."
+      "Camera access was denied. QR generation is still available.": "L’accès à la caméra a été refusé. La génération de codes QR reste disponible.",
+      "Gemini: create a key at aistudio.google.com. Check your project’s free quota, pricing and data terms before sending personal notes.": "Gemini : créez une clé sur aistudio.google.com. Vérifiez le quota gratuit, les tarifs et les conditions relatives aux données de votre projet avant d’envoyer des notes personnelles."
     }
   }
 }

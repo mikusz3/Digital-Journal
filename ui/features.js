@@ -24,7 +24,7 @@ async function settings() {
   dialog.querySelector('#api-settings').onclick = () => { dialog.close(); apiSettings(); };
 }
 function apiSettings() {
-  showForm('AI provider keys', `Requests use your provider account and may incur charges. ${preferences.secure ? 'Remembered keys use your operating system’s encrypted storage.' : 'Secure storage is unavailable; keys can be used for this session only.'}`, `<label>Provider<select name="provider" aria-label="Provider"><option value="openai">OpenAI</option><option value="deepseek">DeepSeek</option></select></label><p id="key-status" class="field-help"></p><label>New API key<input name="key" type="password" autocomplete="off" maxlength="512" required></label><label class="check"><input type="checkbox" name="remember" ${preferences.secure ? '' : 'disabled'}>Remember securely</label><button id="remove-key" type="button">Remove selected provider key</button>${formFooter('Save key')}`, async input => {
+  showForm('AI provider keys', `Requests use your provider account and may incur charges. ${preferences.secure ? 'Remembered keys use your operating system’s encrypted storage.' : 'Secure storage is unavailable; keys can be used for this session only.'}`, `<label>Provider<select name="provider" aria-label="Provider"><option value="openai">OpenAI</option><option value="deepseek">DeepSeek</option><option value="gemini">Google Gemini</option></select></label><p class="field-help">Gemini: create a key at aistudio.google.com. Check your project’s free quota, pricing and data terms before sending personal notes.</p><p id="key-status" class="field-help"></p><label>New API key<input name="key" type="password" autocomplete="off" maxlength="512" required></label><label class="check"><input type="checkbox" name="remember" ${preferences.secure ? '' : 'disabled'}>Remember securely</label><button id="remove-key" type="button">Remove selected provider key</button>${formFooter('Save key')}`, async input => {
     preferences = (await call('setKey', { ...input, remember: !!input.remember })).preferences;
     dialog.querySelector('[name=key]').value = ''; dialog.close(); notify('Key saved.');
   });
@@ -33,7 +33,7 @@ function apiSettings() {
   provider.onchange = status; status();
   dialog.querySelector('#remove-key').onclick = async () => { try { preferences = (await call('setKey', { provider: provider.value, key: '', remember: false })).preferences; status(); } catch (e) { dialog.querySelector('.error').textContent = e.message; } };
 }
-function about() { showForm('About Digital Journal', credits, '<p class="field-help">Version 0.3.1 · Local journals, optional online AI. Source: github.com/mikusz3/Digital-Journal</p><p class="field-help">Compatibility: Android can generate and scan QR links. Reading-app integration and printer support are documented investigations; collections and printing are scheduled for later.</p>' + formFooter('Close'), async () => dialog.close()); }
+function about() { showForm('About Digital Journal', credits, '<p class="field-help">Version 0.3.2 · Local journals, optional online AI. Source: github.com/mikusz3/Digital-Journal</p><p class="field-help">Compatibility: Android can generate and scan QR links. Reading-app integration and printer support are documented investigations; collections and printing are scheduled for later.</p>' + formFooter('Close'), async () => dialog.close()); }
 function celebrate() {
   if (preferences.reduceMotion || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const burst = document.createElement('div'); burst.className = 'confetti'; burst.setAttribute('aria-hidden','true');
@@ -66,11 +66,11 @@ function taskForm(existing, added = []) {
 function ai(kind, task, suppliedContext) {
   const journal = currentJournal();
   const initial = suppliedContext || (kind === 'steps' ? `${task.title}\n${task.notes}` : `Suggest paper spreads for a ${journal.pages}-page ${journal.format} notebook. My interests: `);
-  showForm(kind === 'steps' ? 'AI task breakdown' : 'AI spread ideas', 'Only the text below is sent to your selected provider when you press Generate. Your account may be charged. Suggestions are drafts for you to review.', `<label>Provider<select name="provider" aria-label="Provider"><option value="openai">OpenAI</option><option value="deepseek">DeepSeek</option></select></label><label>Model<input name="model" value="gpt-4.1-mini" maxlength="100" required></label><label>Text to send<textarea name="context" rows="6" maxlength="6000" required>${escapeHtml(initial)}</textarea></label>${formFooter('Generate')}`, async v => {
+  showForm(kind === 'steps' ? 'AI task breakdown' : 'AI spread ideas', 'Only the text below is sent to your selected provider when you press Generate. Your account may be charged. Suggestions are drafts for you to review.', `<label>Provider<select name="provider" aria-label="Provider"><option value="openai">OpenAI</option><option value="deepseek">DeepSeek</option><option value="gemini">Google Gemini</option></select></label><label>Model<input name="model" value="gpt-4.1-mini" maxlength="100" required></label><label>Text to send<textarea name="context" rows="6" maxlength="6000" required>${escapeHtml(initial)}</textarea></label>${formFooter('Generate')}`, async v => {
     const r = await call('generateAI', {...v,kind}); if (!dialog.open) return;
     dialog.close(); reviewAI(kind,r.items,task);
   });
-  dialog.querySelector('[name=provider]').onchange = e => { dialog.querySelector('[name=model]').value = e.target.value === 'openai' ? 'gpt-4.1-mini' : 'deepseek-flash'; };
+  dialog.querySelector('[name=provider]').onchange = e => { dialog.querySelector('[name=model]').value = ({openai:'gpt-4.1-mini',deepseek:'deepseek-flash',gemini:'gemini-2.5-flash-lite'})[e.target.value]; };
   dialog.addEventListener('close', () => { window.bujo.cancelAI(); }, {once:true});
 }
 function reviewAI(kind, items, task) {

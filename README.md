@@ -23,7 +23,7 @@ Get builds from [GitHub Releases](https://github.com/mikusz3/Digital-Journal/rel
 - Local profiles, journals, page ranges, search and edits; exact-name-confirmed profile deletion.
 - Backup export/import with preview; imports become separate copies and never overwrite existing profiles.
 - Tasks, optional dates, notes and subtasks, completion/reopening, and optional confetti respecting reduced motion.
-- Optional OpenAI or DeepSeek spread suggestions and task breakdowns. Review and edit before saving.
+- Optional OpenAI, DeepSeek or Google Gemini spread suggestions and task breakdowns. Review and edit before saving.
 - Android QR link generation, PNG export and camera scanning with confirmation before opening links.
 - Light, Dark, Matrix, XP Luna-inspired, Frutiger Aero-inspired, Win9x-inspired, Discord-inspired and custom palettes. Custom gradients, local wallpaper and dimming.
 - In-app credits and supported Android launch shortcuts for Cover to Cover Club and Xiaomi Home. See [compatibility findings](docs/COMPATIBILITY.md).
@@ -32,7 +32,7 @@ Collections (task 8), print layout (11), printable installation QR (14), and jou
 
 ## Optional AI
 
-Open **Settings → AI provider keys** and enter your own provider key there, never in a GitHub issue or chat. API billing is separate from ChatGPT/Codex subscriptions. Configure a model your provider account can access; the editable defaults are `gpt-4.1-mini` and `deepseek-flash`.
+Open **Settings → AI provider keys** and enter your own provider key there, never in a GitHub issue or chat. API billing is separate from ChatGPT/Codex subscriptions. Configure a model your provider account can access; the editable defaults are `gpt-4.1-mini`, `deepseek-flash` and `gemini-2.5-flash-lite`.
 
 The app sends only the text displayed in the AI form, when you press Generate, directly to the selected provider over HTTPS. It does not upload your whole profile or backup. Results cannot run commands or silently write to journals. Generated content can be mistaken; review it. Manual planning works without a key or internet.
 
@@ -79,3 +79,13 @@ The [macOS and iOS roadmap](docs/APPLE_ROADMAP.md) covers reuse of the desktop a
 Version 0.3.1 distinguishes billing, invalid keys, model access, rate limits and temporary provider failures without displaying raw provider messages or credentials. **DeepSeek HTTP 402 means insufficient API balance**: check your DeepSeek API account balance. OpenAI can report exhausted API credits or spending limits as HTTP 429 with `insufficient_quota`; a plain rate-limit 429 means wait before retrying. API billing is separate from chat subscriptions. An app update cannot add credits or bypass account limits. No automatic paid retries are made.
 
 References: [DeepSeek errors](https://api-docs.deepseek.com/quick_start/error_codes/), [OpenAI 429 troubleshooting](https://help.openai.com/en/articles/5955604).
+
+### Google Gemini (0.3.2)
+
+1. Create a Gemini API key in [Google AI Studio](https://aistudio.google.com/apikey), following [Google's key setup guide](https://ai.google.dev/gemini-api/docs/api-key). Keep it out of chat, issues and screenshots.
+2. In **Settings → AI provider keys**, select **Google Gemini** (Android: `gemini`) and save the key.
+3. In AI spread ideas or task breakdown, select Gemini. The default is `gemini-2.5-flash-lite`; the model remains editable. Generate, review, then choose what to save.
+
+Google currently lists free-tier input/output for this model, subject to project limits and availability. Check your project's tier in AI Studio; the app cannot detect or guarantee free usage. It never enables billing, switches providers, or retries a paid request automatically. See [current pricing](https://ai.google.dev/gemini-api/docs/pricing) and [rate limits](https://ai.google.dev/gemini-api/docs/rate-limits).
+
+Google's [terms](https://ai.google.dev/gemini-api/terms) require Paid Services when making API clients available to users in the EEA, UK or Switzerland. Unpaid-service data may be used to improve Google's products, with regional exceptions described in those terms. Review eligibility and data handling before sending personal journal content. No Google account enrollment or billing change is performed by Digital Journal.

@@ -7,6 +7,20 @@ import com.google.zxing.*
 import com.google.zxing.common.HybridBinarizer
 import com.google.zxing.qrcode.QRCodeWriter
 class FeaturesTest {
+    @Test fun geminiStructuredRequestsAndSafetyResponses() {
+        assertEquals("gemini-2.5-flash-lite",AiClient.defaultModel("gemini"))
+        val body=AiClient.geminiBody("JSON instruction","My plan")
+        assertEquals("My plan",body.getJSONArray("contents").getJSONObject(0).getJSONArray("parts").getJSONObject(0).getString("text"))
+        assertEquals("application/json",body.getJSONObject("generationConfig").getJSONObject("responseFormat").getJSONObject("text").getString("mimeType"))
+        val content=JSONObject().put("items",JSONArray().put(JSONObject().put("title","Plan").put("detail","Notes column"))).toString()
+        val reply=JSONObject().put("candidates",JSONArray().put(JSONObject().put("finishReason","STOP").put("content",JSONObject().put("parts",JSONArray().put(JSONObject().put("thought",true).put("text","reasoning")).put(JSONObject().put("text",content))))))
+        assertEquals("Plan",AiClient.parse("gemini",reply).single().getString("title"))
+        assertThrows(IllegalArgumentException::class.java){AiClient.parse("gemini",JSONObject("""{"promptFeedback":{"blockReason":"SAFETY"}}"""))}
+        reply.getJSONArray("candidates").getJSONObject(0).put("finishReason","MAX_TOKENS")
+        assertThrows(IllegalArgumentException::class.java){AiClient.parse("gemini",reply)}
+        assertTrue(AiClient.providerError("gemini",429).contains("daily quota"))
+    }
+
     @Test fun providerErrorsAreActionableAndDoNotEchoSecrets() {
         assertTrue(AiClient.providerError("deepseek",402).contains("credits"))
         val raw = """{"error":{"type":"insufficient_quota","message":"secret-key-private-context"}}"""
