@@ -4,7 +4,7 @@ const translatedAttributes=new WeakMap();
 function tr(source) {
   const messages = preferences.locales?.messages?.[preferences.language || 'en'] || {};
   if (messages[source]) return messages[source];
-  for (const prefix of ['Complete ', 'Reopen ', 'Edit ', 'Open ', 'Delete profile ']) {
+  for (const prefix of ['Complete ', 'Reopen ', 'Edit ', 'Open ', 'Delete profile ', 'Rename profile ']) {
     if (source.startsWith(prefix) && messages[prefix+'{name}']) return messages[prefix+'{name}'].replace('{name}',source.slice(prefix.length));
   }
   return source;

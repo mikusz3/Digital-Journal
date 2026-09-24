@@ -64,6 +64,12 @@ object JournalData {
         state.getJSONArray("profiles").put(JSONObject().put("id", id).put("name", cleaned).put("journals", JSONArray()))
         return id
     }
+    fun renameProfile(state: JSONObject, profileId: String, name: String) {
+        val selected = profile(state, profileId)
+        val cleaned = label(name, "Name", 80)
+        require(profiles(state).none { it.getString("id") != profileId && it.getString("name").equals(cleaned, true) }) { "A profile with that name already exists." }
+        selected.put("name",cleaned)
+    }
     fun deleteProfile(state: JSONObject, profileId: String, confirmation: String) {
         val selected = profile(state, profileId)
         require(confirmation == selected.getString("name")) { "Type the profile name exactly to confirm deletion." }

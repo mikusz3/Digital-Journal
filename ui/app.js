@@ -62,6 +62,14 @@ async function addProfile(input) {
 function newProfile() {
   showForm('A space of your own', 'No email, password or online account needed.', profileFields() + formFooter('Create profile'), addProfile);
 }
+function renameProfile(id) {
+  const profile = state.profiles.find(p => p.id === id);
+  if (!profile) return;
+  showForm('Rename profile', 'Only stored here. Use your name or a name you prefer.', profileFields() + formFooter('Save'), async input => {
+    await save('renameProfile', {profileId:id,name:input.name}); dialog.close(); render(); headingFocus();
+  });
+  dialog.querySelector('[name=name]').value = profile.name;
+}
 function deleteProfile(id) {
   const profile = state.profiles.find(p => p.id === id);
   if (!profile) return;
@@ -95,9 +103,10 @@ function renderWelcome() {
   wireBackups();
 }
 function renderProfiles() {
-  root.innerHTML = `<main class="welcome"><header class="welcome-head">${brand}${local}</header><p class="eyebrow">Make yourself at home</p><h1>Whose journal shelf?</h1><p class="muted">Each profile has its own space and paper journals.</p><div class="profiles">${state.profiles.map(p => `<div class="profile-entry"><button class="profile-tile" data-profile="${p.id}" aria-label="${escapeHtml(p.name)}"><span class="avatar">${escapeHtml(p.name.charAt(0).toUpperCase())}</span><span data-user-content>${escapeHtml(p.name)}</span><small>${p.journals.length} journal${p.journals.length === 1 ? '' : 's'}</small></button><button class="quiet danger-text" data-delete-profile="${p.id}" aria-label="Delete profile ${escapeHtml(p.name)}">Delete profile</button></div>`).join('')}<button class="profile-tile" id="add-profile"><span class="avatar">+</span><span>Create a profile</span><small>A fresh, separate space</small></button></div><p class="gentle-note">Profiles organize journals; they are not password-protected accounts.</p></main>`;
+  root.innerHTML = `<main class="welcome"><header class="welcome-head">${brand}${local}</header><p class="eyebrow">Make yourself at home</p><h1>Whose journal shelf?</h1><p class="muted">Each profile has its own space and paper journals.</p><div class="profiles">${state.profiles.map(p => `<div class="profile-entry"><button class="profile-tile" data-profile="${p.id}" aria-label="${escapeHtml(p.name)}"><span class="avatar">${escapeHtml(p.name.charAt(0).toUpperCase())}</span><span data-user-content>${escapeHtml(p.name)}</span><small>${p.journals.length} journal${p.journals.length === 1 ? '' : 's'}</small></button><button class="quiet" data-rename-profile="${p.id}" aria-label="Rename profile ${escapeHtml(p.name)}">Rename profile</button><button class="quiet danger-text" data-delete-profile="${p.id}" aria-label="Delete profile ${escapeHtml(p.name)}">Delete profile</button></div>`).join('')}<button class="profile-tile" id="add-profile"><span class="avatar">+</span><span>Create a profile</span><small>A fresh, separate space</small></button></div><p class="gentle-note">Profiles organize journals; they are not password-protected accounts.</p></main>`;
   wireBackups();
   root.querySelector('#add-profile').addEventListener('click', newProfile);
+  root.querySelectorAll('[data-rename-profile]').forEach(b => b.addEventListener('click', () => renameProfile(b.dataset.renameProfile)));
   root.querySelectorAll('[data-delete-profile]').forEach(b => b.addEventListener('click', () => deleteProfile(b.dataset.deleteProfile)));
   root.querySelectorAll('[data-profile]').forEach(button => button.addEventListener('click', () => { profileId = button.dataset.profile; journalId = null; render(); headingFocus(); }));
 }

@@ -59,6 +59,8 @@ class MainActivity : Activity() {
             journalId = savedInstanceState.getString("journal")
             query = savedInstanceState.getString("query", "")
         } else if (profiles.size == 1) profileId = profiles.first().getString("id")
+        if(savedInstanceState==null) applyWidgetIntent(intent)
+        runCatching { JournalWidget.updateAll(this,state()) }
         if (Build.VERSION.SDK_INT >= 33) onBackInvokedDispatcher.registerOnBackInvokedCallback(0) { goBack() }
         render()
         savedInstanceState?.let { saved ->
@@ -67,6 +69,7 @@ class MainActivity : Activity() {
                 "profile" -> profileForm()
                 "journal" -> journalForm(id)
                 "spread" -> spreadForm(id)
+                "rename" -> if (id != null) renameProfileForm(id)
                 "delete" -> if (id != null) deleteProfileForm(id)
                 "backups" -> backups()
                 "import" -> if (pendingFile.exists()) previewImport()
@@ -78,6 +81,17 @@ class MainActivity : Activity() {
                 }
             } }
         }
+    }
+    private fun applyWidgetIntent(source: Intent) {
+        if(!source.hasExtra("widget_profile"))return
+        val target=WidgetContent.target(state(),source.getStringExtra("widget_profile"),source.getStringExtra("widget_journal"))
+        profileId=target?.first; journalId=target?.second; query=""
+    }
+    override fun onNewIntent(newIntent: Intent) {
+        super.onNewIntent(newIntent);setIntent(newIntent)
+        if(!::repository.isInitialized)return
+        currentDialog?.dismiss()
+        try { repository=JournalRepository(this);applyWidgetIntent(newIntent);render() } catch(e:Exception) { problem(e) }
     }
     override fun onSaveInstanceState(out: Bundle) {
         out.putString("profile", profileId); out.putString("journal", journalId); out.putString("query", query)
@@ -147,6 +161,7 @@ class MainActivity : Activity() {
                 button(tile, "${p.getString("name")} · ${JournalData.journals(p).size} journals") {
                     profileId = p.getString("id"); journalId = null; render()
                 }
+                button(tile, I18n.t(this,"Rename profile")) { renameProfileForm(p.getString("id")) }
                 button(tile, I18n.t(this,"Delete profile")) { deleteProfileForm(p.getString("id")) }.apply {
                     setTextColor(Color.rgb(151, 54, 41)); contentDescription = "Delete profile ${p.getString("name")}"
                 }
@@ -160,6 +175,7 @@ class MainActivity : Activity() {
         if (journalId == null) {
             text(content, "${profile()!!.getString("name")} · ${I18n.t(this,"Your journal shelf")}", 26f)
             button(content, I18n.t(this,"Switch or add profile")) { profileId = null; render() }
+            button(content,I18n.t(this,"Rename profile")) { renameProfileForm(profileId!!) }
             val journals = JournalData.journals(profile()!!)
             if (journals.isEmpty()) text(content, I18n.t(this,"Start with the notebook beside you. Add its page index whenever you feel like it."), color = muted)
             journals.forEach { j -> val tile = card(content)
@@ -243,6 +259,11 @@ class MainActivity : Activity() {
         repository.change { newId = JournalData.addProfile(it, value("name")) }
         profileId = newId; journalId = null
     })
+    private fun renameProfileForm(id: String) {
+        form("rename", "Rename profile", id, build = { body ->
+            input(body,"name","Full name",JournalData.profile(state(),id).getString("name"),max=80)
+        }, save = { repository.change { JournalData.renameProfile(it,id,value("name")) } })
+    }
     private fun deleteProfileForm(id: String) {
         val p = JournalData.profile(state(), id)
         form("delete", "Delete this profile?", id, build = { body ->

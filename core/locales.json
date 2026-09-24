@@ -221,7 +221,16 @@
       "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.": "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.",
       "Month / Year · Start the grid on the weekday that fits your month.": "Month / Year · Start the grid on the weekday that fits your month.",
       "Camera access was denied. QR generation is still available.": "Camera access was denied. QR generation is still available.",
-      "Appearance stays on this device.": "Appearance stays on this device."
+      "Appearance stays on this device.": "Appearance stays on this device.",
+      "Rename profile": "Rename profile",
+      "Journal shortcuts": "Journal shortcuts",
+      "Choose a profile for this widget.": "Choose a profile for this widget.",
+      "Choose a profile. The widget shows its first three journals.": "Choose a profile. The widget shows its first three journals.",
+      "Choose profile": "Choose profile",
+      "Open app": "Open app",
+      "Create a profile in the app first.": "Create a profile in the app first.",
+      "Could not load journals. Open the app to check your data.": "Could not load journals. Open the app to check your data.",
+      "Rename profile {name}": "Rename profile {name}"
     },
     "pl": {
       "Settings": "Ustawienia",
@@ -433,7 +442,16 @@
       "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.": "Zacznij od notesu obok Ciebie. Dodaj indeks stron wtedy, gdy masz ochotę.",
       "Month / Year · Start the grid on the weekday that fits your month.": "Miesiąc / Rok",
       "Camera access was denied. QR generation is still available.": "Odmówiono dostępu do aparatu. Nadal możesz generować kody QR.",
-      "Appearance stays on this device.": "Ustawienia wyglądu pozostają na tym urządzeniu."
+      "Appearance stays on this device.": "Ustawienia wyglądu pozostają na tym urządzeniu.",
+      "Rename profile": "Zmień nazwę profilu",
+      "Journal shortcuts": "Skróty do dzienników",
+      "Choose a profile for this widget.": "Wybierz profil dla tego widżetu.",
+      "Choose a profile. The widget shows its first three journals.": "Wybierz profil. Widżet pokazuje jego trzy pierwsze dzienniki.",
+      "Choose profile": "Wybierz profil",
+      "Open app": "Otwórz aplikację",
+      "Create a profile in the app first.": "Najpierw utwórz profil w aplikacji.",
+      "Could not load journals. Open the app to check your data.": "Nie można wczytać dzienników. Otwórz aplikację, aby sprawdzić dane.",
+      "Rename profile {name}": "Zmień nazwę profilu {name}"
     },
     "de": {
       "Settings": "Einstellungen",
@@ -645,7 +663,16 @@
       "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.": "Beginne mit dem Notizbuch neben dir. Ergänze das Verzeichnis, wann du möchtest.",
       "Month / Year · Start the grid on the weekday that fits your month.": "Monat / Jahr",
       "Camera access was denied. QR generation is still available.": "Kamerazugriff abgelehnt. QR-Codes können weiterhin erstellt werden.",
-      "Appearance stays on this device.": "Das Erscheinungsbild bleibt auf diesem Gerät."
+      "Appearance stays on this device.": "Das Erscheinungsbild bleibt auf diesem Gerät.",
+      "Rename profile": "Profil umbenennen",
+      "Journal shortcuts": "Journal-Verknüpfungen",
+      "Choose a profile for this widget.": "Wähle ein Profil für dieses Widget.",
+      "Choose a profile. The widget shows its first three journals.": "Wähle ein Profil. Das Widget zeigt dessen erste drei Journale.",
+      "Choose profile": "Profil wählen",
+      "Open app": "App öffnen",
+      "Create a profile in the app first.": "Erstelle zuerst ein Profil in der App.",
+      "Could not load journals. Open the app to check your data.": "Journale konnten nicht geladen werden. Öffne die App, um deine Daten zu prüfen.",
+      "Rename profile {name}": "Profil umbenennen {name}"
     },
     "es": {
       "Settings": "Ajustes",
@@ -857,7 +884,16 @@
       "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.": "Empieza con el cuaderno que tienes al lado. Añade su índice cuando quieras.",
       "Month / Year · Start the grid on the weekday that fits your month.": "Mes / Año",
       "Camera access was denied. QR generation is still available.": "Se ha denegado el acceso a la cámara. Puedes seguir generando códigos QR.",
-      "Appearance stays on this device.": "La apariencia se guarda en este dispositivo."
+      "Appearance stays on this device.": "La apariencia se guarda en este dispositivo.",
+      "Rename profile": "Renombrar perfil",
+      "Journal shortcuts": "Accesos a diarios",
+      "Choose a profile for this widget.": "Elige un perfil para este widget.",
+      "Choose a profile. The widget shows its first three journals.": "Elige un perfil. El widget muestra sus tres primeros diarios.",
+      "Choose profile": "Elegir perfil",
+      "Open app": "Abrir aplicación",
+      "Create a profile in the app first.": "Primero crea un perfil en la aplicación.",
+      "Could not load journals. Open the app to check your data.": "No se pudieron cargar los diarios. Abre la aplicación para revisar tus datos.",
+      "Rename profile {name}": "Renombrar perfil {name}"
     },
     "es-419": {
       "Settings": "Configuración",
@@ -1069,7 +1105,16 @@
       "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.": "Empieza con el cuaderno que tienes al lado. Agrega su índice cuando quieras.",
       "Month / Year · Start the grid on the weekday that fits your month.": "Mes / Año",
       "Camera access was denied. QR generation is still available.": "Se denegó el acceso a la cámara. Puedes seguir generando códigos QR.",
-      "Appearance stays on this device.": "La apariencia se guarda en este dispositivo."
+      "Appearance stays on this device.": "La apariencia se guarda en este dispositivo.",
+      "Rename profile": "Renombrar perfil",
+      "Journal shortcuts": "Accesos a diarios",
+      "Choose a profile for this widget.": "Elige un perfil para este widget.",
+      "Choose a profile. The widget shows its first three journals.": "Elige un perfil. El widget muestra sus tres primeros diarios.",
+      "Choose profile": "Elegir perfil",
+      "Open app": "Abrir aplicación",
+      "Create a profile in the app first.": "Primero crea un perfil en la aplicación.",
+      "Could not load journals. Open the app to check your data.": "No se pudieron cargar los diarios. Abre la aplicación para revisar tus datos.",
+      "Rename profile {name}": "Renombrar perfil {name}"
     },
     "ja": {
       "Settings": "設定",
@@ -1281,7 +1326,16 @@
       "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.": "手元のノートから始めましょう。好きなときにインデックスを追加できます。",
       "Month / Year · Start the grid on the weekday that fits your month.": "月・年",
       "Camera access was denied. QR generation is still available.": "カメラへのアクセスが拒否されました。QRコードの生成は引き続き使えます。",
-      "Appearance stays on this device.": "外観設定はこの端末に保存されます。"
+      "Appearance stays on this device.": "外観設定はこの端末に保存されます。",
+      "Rename profile": "プロフィール名を変更",
+      "Journal shortcuts": "ジャーナルへのショートカット",
+      "Choose a profile for this widget.": "このウィジェットのプロフィールを選択してください。",
+      "Choose a profile. The widget shows its first three journals.": "プロフィールを選択してください。最初の3冊のジャーナルが表示されます。",
+      "Choose profile": "プロフィールを選択",
+      "Open app": "アプリを開く",
+      "Create a profile in the app first.": "まずアプリでプロフィールを作成してください。",
+      "Could not load journals. Open the app to check your data.": "ジャーナルを読み込めません。アプリを開いてデータを確認してください。",
+      "Rename profile {name}": "プロフィール名を変更 {name}"
     },
     "ru": {
       "Settings": "Настройки",
@@ -1493,7 +1547,16 @@
       "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.": "Начните с блокнота рядом. Добавьте указатель страниц, когда захотите.",
       "Month / Year · Start the grid on the weekday that fits your month.": "Месяц / Год",
       "Camera access was denied. QR generation is still available.": "Доступ к камере запрещён. Создание QR-кодов по-прежнему доступно.",
-      "Appearance stays on this device.": "Настройки внешнего вида сохраняются на этом устройстве."
+      "Appearance stays on this device.": "Настройки внешнего вида сохраняются на этом устройстве.",
+      "Rename profile": "Переименовать профиль",
+      "Journal shortcuts": "Ярлыки журналов",
+      "Choose a profile for this widget.": "Выберите профиль для этого виджета.",
+      "Choose a profile. The widget shows its first three journals.": "Выберите профиль. Виджет показывает первые три журнала.",
+      "Choose profile": "Выбрать профиль",
+      "Open app": "Открыть приложение",
+      "Create a profile in the app first.": "Сначала создайте профиль в приложении.",
+      "Could not load journals. Open the app to check your data.": "Не удалось загрузить журналы. Откройте приложение и проверьте данные.",
+      "Rename profile {name}": "Переименовать профиль {name}"
     },
     "uk": {
       "Settings": "Налаштування",
@@ -1705,7 +1768,16 @@
       "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.": "Почніть із записника поруч. Додайте зміст сторінок, коли захочете.",
       "Month / Year · Start the grid on the weekday that fits your month.": "Місяць / Рік",
       "Camera access was denied. QR generation is still available.": "Доступ до камери заборонено. Створення QR-кодів і далі доступне.",
-      "Appearance stays on this device.": "Налаштування вигляду зберігаються на цьому пристрої."
+      "Appearance stays on this device.": "Налаштування вигляду зберігаються на цьому пристрої.",
+      "Rename profile": "Перейменувати профіль",
+      "Journal shortcuts": "Ярлики щоденників",
+      "Choose a profile for this widget.": "Виберіть профіль для цього віджета.",
+      "Choose a profile. The widget shows its first three journals.": "Виберіть профіль. Віджет показує перші три щоденники.",
+      "Choose profile": "Вибрати профіль",
+      "Open app": "Відкрити застосунок",
+      "Create a profile in the app first.": "Спочатку створіть профіль у застосунку.",
+      "Could not load journals. Open the app to check your data.": "Не вдалося завантажити щоденники. Відкрийте застосунок і перевірте дані.",
+      "Rename profile {name}": "Перейменувати профіль {name}"
     },
     "fr": {
       "Settings": "Paramètres",
@@ -1917,7 +1989,16 @@
       "Add the notebook beside you. You can bring in your existing page index, or start with a blank one.": "Commencez par le carnet à côté de vous. Ajoutez son index quand vous le souhaitez.",
       "Month / Year · Start the grid on the weekday that fits your month.": "Mois / Année",
       "Camera access was denied. QR generation is still available.": "L’accès à la caméra a été refusé. La génération de codes QR reste disponible.",
-      "Appearance stays on this device.": "L’apparence reste sur cet appareil."
+      "Appearance stays on this device.": "L’apparence reste sur cet appareil.",
+      "Rename profile": "Renommer le profil",
+      "Journal shortcuts": "Raccourcis des journaux",
+      "Choose a profile for this widget.": "Choisissez un profil pour ce widget.",
+      "Choose a profile. The widget shows its first three journals.": "Choisissez un profil. Le widget affiche ses trois premiers journaux.",
+      "Choose profile": "Choisir le profil",
+      "Open app": "Ouvrir l’application",
+      "Create a profile in the app first.": "Créez d’abord un profil dans l’application.",
+      "Could not load journals. Open the app to check your data.": "Impossible de charger les journaux. Ouvrez l’application pour vérifier vos données.",
+      "Rename profile {name}": "Renommer le profil {name}"
     }
   }
 }

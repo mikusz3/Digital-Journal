@@ -50,7 +50,7 @@ npm run package:windows
 
 Windows packaging is best run on Windows; Linux packaging on Linux. Packaged apps include their runtime and do not require Node.js. `launch.sh` also runs a source checkout on Linux after installing dependencies.
 
-Android uses the included Gradle wrapper, Android SDK 36, and JDK 25 (or another JDK supported by Gradle 9.3.1):
+Android uses the included Gradle wrapper, Android SDK 36, and JDK 25 (or another JDK supported by Gradle 9.6.0):
 
 ```sh
 cd android
@@ -70,3 +70,9 @@ Private development prompts, device screenshots, signing keys, API keys and pers
 ### Planned Apple platforms
 
 The [macOS and iOS roadmap](docs/APPLE_ROADMAP.md) covers reuse of the desktop app, an iPhone XR-compatible companion, signing, and testing without an owned Mac. Apple builds are not included in this release.
+
+## Profile names and Android widget (0.5.0)
+
+Use **Rename profile** on the profile chooser (Android also shows it on the journal shelf). Names must be non-empty, at most 80 characters, and unique ignoring case. Renaming keeps the same profile, journals, tasks and backups.
+
+On Android, long-press an empty area of your home screen, choose **Widgets → Digital Journal**, place the widget, then select a profile. The widget shows that profile's first three journals and an **Open app** button for the full shelf. Tap a journal to open its page index. **Choose profile** reconfigures this widget; multiple widgets can use different profiles. Names refresh after edits. If a profile is deleted, its widget asks you to choose a profile instead of switching to someone else's journals. Widget configuration stays on the device and is not included in journal backups.

@@ -7,6 +7,23 @@ import com.google.zxing.*
 import com.google.zxing.common.HybridBinarizer
 import com.google.zxing.qrcode.QRCodeWriter
 class FeaturesTest {
+    @Test fun profileRenameAndWidgetTargetsPreserveOwnership() {
+        val state=JournalData.fresh();val id=JournalData.addProfile(state,"Old name");val other=JournalData.addProfile(state,"Other")
+        val journal=JournalData.saveJournal(state,id,null,"Notebook",100,"A5","",null)
+        val another=JournalData.saveJournal(state,other,null,"Private notebook",100,"A5","",null)
+        val before=JournalData.profile(state,id).getJSONArray("journals").toString()
+        JournalData.renameProfile(state,id," New name ")
+        assertEquals("New name",JournalData.profile(state,id).getString("name"));assertEquals(before,JournalData.profile(state,id).getJSONArray("journals").toString())
+        for(name in listOf("", "other", "x".repeat(81)))assertThrows(IllegalArgumentException::class.java){JournalData.renameProfile(state,id,name)}
+        assertEquals("New name",WidgetContent.shelf(state,id)!!.name)
+        assertEquals(id to journal,WidgetContent.target(state,id,journal))
+        assertEquals(id to null,WidgetContent.target(state,id,another))
+        assertNull(WidgetContent.shelf(state,"missing"));assertNull(WidgetContent.target(state,"missing",journal))
+        repeat(4){JournalData.saveJournal(state,id,null,"Journal $it",100,"A5","",null)}
+        assertEquals(3,WidgetContent.shelf(state,id)!!.journals.size)
+        JournalData.deleteProfile(state,id,"New name");assertNull(WidgetContent.shelf(state,id))
+    }
+
     @Test fun tasksMigrateRoundTripAndRegenerateIdentifiers() {
         val state=JournalData.validate(JSONObject("""{"version":1,"profiles":[{"id":"legacy","name":"Old profile","journals":[]}]}"""))
         assertEquals(2,state.getInt("version"));val p=JournalData.profiles(state).single()

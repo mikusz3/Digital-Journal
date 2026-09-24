@@ -2,7 +2,7 @@
 
 Native Kotlin and platform Views, Android 8+ (minSdk 26), compile/target SDK 36. The stable application ID is `pl.digitalbujo.app` to preserve existing installations; the displayed name is Digital Journal.
 
-Use JDK 25, Android SDK 36 and the included Gradle 9.3.1 wrapper. Set `ANDROID_HOME`, or create untracked `local.properties` with `sdk.dir=/path/to/sdk`.
+Use JDK 25, Android SDK 36 and the included Gradle 9.6.0 wrapper. Set `ANDROID_HOME`, or create untracked `local.properties` with `sdk.dir=/path/to/sdk`.
 
 ```sh
 ./gradlew :app:assembleDebug :app:assembleQa :app:testDebugUnitTest :app:lintDebug

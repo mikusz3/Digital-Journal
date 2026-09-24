@@ -45,6 +45,12 @@ function mutate(state, action, input = {}) {
     state.profiles = state.profiles.filter(p => p.id !== profile.id);
     return profile.id;
   }
+  if (action === 'renameProfile') {
+    const profile = getProfile(state, input.profileId);
+    const name = label(input.name, 'Name', 80);
+    if (state.profiles.some(p => p.id !== profile.id && p.name.toLocaleLowerCase() === name.toLocaleLowerCase())) throw new Error('A profile with that name already exists. Choose a different name.');
+    profile.name = name; return profile.id;
+  }
   if (action === 'createProfile') {
     const name = label(input.name, 'Name', 80);
     if (state.profiles.some(p => p.name.toLocaleLowerCase() === name.toLocaleLowerCase())) throw new Error('A profile with that name already exists. Choose a different name.');

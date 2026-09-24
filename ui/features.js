@@ -22,7 +22,7 @@ async function settings() {
   dialog.querySelector('[name=theme]').value = preferences.theme || 'Light';
   for (const [id,value] of [['wallpaper',null],['clear-wallpaper','clear']]) dialog.querySelector('#'+id).onclick = async () => { try { preferences = (await call('wallpaper', value)).preferences; applyAppearance(); } catch (e) { dialog.querySelector('.error').textContent = e.message; } };
 }
-function about() { showForm('About Digital Journal', credits, '<p class="field-help">Version 0.4.0 · Local journals, your own ideas. Source: github.com/mikusz3/Digital-Journal</p><p class="field-help">Compatibility: Android can generate and scan QR links. Reading-app integration and printer support are documented investigations; collections and printing are scheduled for later.</p>' + formFooter('Close'), async () => dialog.close()); }
+function about() { showForm('About Digital Journal', credits, '<p class="field-help">Version 0.5.0 · Local journals, your own ideas. Source: github.com/mikusz3/Digital-Journal</p><p class="field-help">Compatibility: Android can generate and scan QR links. Reading-app integration and printer support are documented investigations; collections and printing are scheduled for later.</p>' + formFooter('Close'), async () => dialog.close()); }
 function celebrate() {
   if (preferences.reduceMotion || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const burst = document.createElement('div'); burst.className = 'confetti'; burst.setAttribute('aria-hidden','true');

@@ -1,0 +1,10 @@
+<resources>
+    <style name="WidgetJournalButton">
+        <item name="android:layout_width">match_parent</item><item name="android:layout_height">48dp</item>
+        <item name="android:textColor">#253B32</item><item name="android:backgroundTint">#E0E9DF</item>
+        <item name="android:textAllCaps">false</item><item name="android:textSize">14sp</item>
+        <item name="android:maxLines">1</item><item name="android:ellipsize">end</item>
+        <item name="android:paddingLeft">8dp</item><item name="android:paddingRight">8dp</item>
+    </style>
+    <string name="widget_description">Shortcuts to your paper journals</string>
+</resources>

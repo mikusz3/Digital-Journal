@@ -46,3 +46,15 @@ test('upgrade removes obsolete credentials without touching journals or appearan
   for(const name of ['credentials.json','credentials.json.tmp'])assert.equal(fs.existsSync(path.join(dir,name)),false);
   assert.equal(fs.readFileSync(s.file,'utf8'),before);assert.equal('keys' in p.read(),false);new Preferences(dir);
 });
+test('renaming persists only the selected profile name and rejects duplicates or invalid input',t=>{
+  const s=store(t);const id=s.change('createProfile',{name:'Old name'}).id;
+  const other=s.change('createProfile',{name:'Other'}).id;
+  s.change('createJournal',{profileId:id,title:'Keep this',pages:100,format:'A5'});
+  s.change('saveTask',{profileId:id,title:'Keep task',notes:'',due:'',subtasks:[]});
+  const before=s.read();s.change('renameProfile',{profileId:id,name:'  New name  '});
+  const after=s.read();const expected=structuredClone(before);expected.profiles[0].name='New name';assert.deepEqual(after,expected);
+  assert.equal(new JournalStore(path.dirname(s.file)).read().profiles[0].name,'New name');
+  for(const name of ['', 'other','x'.repeat(81)])assert.throws(()=>s.change('renameProfile',{profileId:id,name}));
+  assert.throws(()=>s.change('renameProfile',{profileId:'missing',name:'No'}));assert.deepEqual(s.read(),after);
+  s.change('renameProfile',{profileId:id,name:'NEW NAME'});assert.equal(s.read().profiles[1].id,other);
+});
