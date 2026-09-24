@@ -1,6 +1,6 @@
 # Digital Journal
 
-A local companion for paper journals, with separate profiles, a page index, gentle task planning and optional AI assistance. Android, Linux and Windows share a portable JSON backup format. No application account or subscription is required.
+A local companion for paper journals, with separate profiles, a page index, gentle task planning and manual spread design. Android, Linux and Windows share a portable JSON backup format. No application account or subscription is required.
 
 Digital Journal is an **independent, fan-made application developed for personal use and offered without profit**. The **Bullet Journal method was created by Ryder Carroll**. **Bullet Journal® and BuJo® are trademarks of Lightcage, LLC**. This project is not affiliated with, sponsored by, or endorsed by Ryder Carroll or Lightcage, LLC. Visit the original creators at [bulletjournal.com](https://bulletjournal.com). Full attribution: [CREDITS.md](CREDITS.md).
 
@@ -17,26 +17,23 @@ Get builds from [GitHub Releases](https://github.com/mikusz3/Digital-Journal/rel
 
 ## Features
 
-- Spread guides: calendar with notes, tracker, log, wishlist, blank and AI-assisted/custom layouts. AI drafts include practical layout instructions for review.
+- Spread guides: calendar with notes, tracker, log, wishlist, blank and custom layouts for your own ideas.
 - A task-linked tomato timer: 5–30 minutes, pause/resume/stop, persistent countdown. Android does not schedule a background alarm; it reports completion on the timer screen.
 - Selectable Polish, English, German, Spanish (Spain and Latin America), Japanese, Russian, Ukrainian and French interfaces. User content is preserved in its original language; legal notices and some technical/system messages retain their source language.
 - Local profiles, journals, page ranges, search and edits; exact-name-confirmed profile deletion.
 - Backup export/import with preview; imports become separate copies and never overwrite existing profiles.
 - Tasks, optional dates, notes and subtasks, completion/reopening, and optional confetti respecting reduced motion.
-- Optional OpenAI, DeepSeek or Google Gemini spread suggestions and task breakdowns. Review and edit before saving.
 - Android QR link generation, PNG export and camera scanning with confirmation before opening links.
 - Light, Dark, Matrix, XP Luna-inspired, Frutiger Aero-inspired, Win9x-inspired, Discord-inspired and custom palettes. Custom gradients, local wallpaper and dimming.
 - In-app credits and supported Android launch shortcuts for Cover to Cover Club and Xiaomi Home. See [compatibility findings](docs/COMPATIBILITY.md).
 
 Collections (task 8), print layout (11), printable installation QR (14), and journal image attachments (4) remain future work. QR images are ordinary link codes, not an implementation of task 14.
 
-## Optional AI
+## Local planning, without AI
 
-Open **Settings → AI provider keys** and enter your own provider key there, never in a GitHub issue or chat. API billing is separate from ChatGPT/Codex subscriptions. Configure a model your provider account can access; the editable defaults are `gpt-4.1-mini`, `deepseek-flash` and `gemini-2.5-flash-lite`.
+Version 0.4.0 permanently removes AI generation, provider settings and API requests. Design spreads yourself with the existing template guides and custom notes; write task subtasks manually. Existing saved layouts and tasks remain editable, including content saved in earlier versions.
 
-The app sends only the text displayed in the AI form, when you press Generate, directly to the selected provider over HTTPS. It does not upload your whole profile or backup. Results cannot run commands or silently write to journals. Generated content can be mistaken; review it. Manual planning works without a key or internet.
-
-Android stores keys using Android Keystore encryption. Desktop uses Electron safeStorage backed by the OS credential service; if secure storage is unavailable, only session keys are allowed. Keys, theme preferences and wallpapers are excluded from journal backups. OpenAI requests set `store: false`; this does not override a provider's other retention policies. See [PRIVACY.md](PRIVACY.md).
+On first launch after upgrading, the app deletes its obsolete provider credential storage (and the Android encryption alias) without reading or decrypting any keys. Journal data, themes, languages, timers and backups remain compatible. This removes local copies; it does not revoke keys at external provider accounts. See [PRIVACY.md](PRIVACY.md).
 
 ## Build from source
 
@@ -73,19 +70,3 @@ Private development prompts, device screenshots, signing keys, API keys and pers
 ### Planned Apple platforms
 
 The [macOS and iOS roadmap](docs/APPLE_ROADMAP.md) covers reuse of the desktop app, an iPhone XR-compatible companion, signing, and testing without an owned Mac. Apple builds are not included in this release.
-
-### AI billing and service errors
-
-Version 0.3.1 distinguishes billing, invalid keys, model access, rate limits and temporary provider failures without displaying raw provider messages or credentials. **DeepSeek HTTP 402 means insufficient API balance**: check your DeepSeek API account balance. OpenAI can report exhausted API credits or spending limits as HTTP 429 with `insufficient_quota`; a plain rate-limit 429 means wait before retrying. API billing is separate from chat subscriptions. An app update cannot add credits or bypass account limits. No automatic paid retries are made.
-
-References: [DeepSeek errors](https://api-docs.deepseek.com/quick_start/error_codes/), [OpenAI 429 troubleshooting](https://help.openai.com/en/articles/5955604).
-
-### Google Gemini (0.3.2)
-
-1. Create a Gemini API key in [Google AI Studio](https://aistudio.google.com/apikey), following [Google's key setup guide](https://ai.google.dev/gemini-api/docs/api-key). Keep it out of chat, issues and screenshots.
-2. In **Settings → AI provider keys**, select **Google Gemini** (Android: `gemini`) and save the key.
-3. In AI spread ideas or task breakdown, select Gemini. The default is `gemini-2.5-flash-lite`; the model remains editable. Generate, review, then choose what to save.
-
-Google currently lists free-tier input/output for this model, subject to project limits and availability. Check your project's tier in AI Studio; the app cannot detect or guarantee free usage. It never enables billing, switches providers, or retries a paid request automatically. See [current pricing](https://ai.google.dev/gemini-api/docs/pricing) and [rate limits](https://ai.google.dev/gemini-api/docs/rate-limits).
-
-Google's [terms](https://ai.google.dev/gemini-api/terms) require Paid Services when making API clients available to users in the EEA, UK or Switzerland. Unpaid-service data may be used to improve Google's products, with regional exceptions described in those terms. Review eligibility and data handling before sending personal journal content. No Google account enrollment or billing change is performed by Digital Journal.

@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog, safeStorage } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('node:path');
 const { pathToFileURL } = require('node:url');
 const { JournalStore } = require('../core/store.cjs');
@@ -18,14 +18,13 @@ let window;
 let store;
 let loadError;
 let preferences;
-let aiRequest;
 const { Preferences } = require('./preferences.cjs');
 const singleInstance = app.requestSingleInstanceLock();
 if (!singleInstance) app.quit();
 else {
   app.on('second-instance', () => { if (window) { if (window.isMinimized()) window.restore(); window.focus(); } });
   app.whenReady().then(() => {
-    try { store = new JournalStore(app.getPath('userData')); preferences = new Preferences(app.getPath('userData'), safeStorage); }
+    try { store = new JournalStore(app.getPath('userData')); preferences = new Preferences(app.getPath('userData')); }
     catch (error) { loadError = error.message; }
     ipcMain.handle('bujo', async (event, action, input) => {
       if (event.senderFrame !== window?.webContents.mainFrame || event.senderFrame.url !== pageUrl) return { ok: false, error: 'This window cannot access journal data.' };
@@ -45,15 +44,6 @@ else {
         }
         if (action === 'preferences') return { ok: true, preferences: preferences.read() };
         if (action === 'savePreferences') return { ok: true, preferences: preferences.save(input) };
-        if (action === 'setKey') return { ok: true, preferences: preferences.setKey(input) };
-        if (action === 'cancelAI') { aiRequest?.abort(); return { ok: true }; }
-        if (action === 'generateAI') {
-          if (aiRequest) throw new Error('An AI request is already running.');
-          const controller = new AbortController(); aiRequest = controller;
-          const timer = setTimeout(() => controller.abort(), 60000);
-          try { return { ok: true, items: await require('../core/ai.cjs').generate({ ...input, language: preferences.data.language || 'en' }, preferences.key(input.provider), controller.signal) }; }
-          finally { clearTimeout(timer); aiRequest = null; }
-        }
         if (action === 'wallpaper') {
           if (input === 'clear') return { ok: true, preferences: preferences.wallpaper('') };
           const selected = await dialog.showOpenDialog(window, { title: 'Choose wallpaper', properties: ['openFile'], filters: [{ name: 'Image', extensions: ['png','jpg','jpeg'] }] });

@@ -178,7 +178,6 @@ class MainActivity : Activity() {
         text(content, "$size · ${j.getInt("pages")} pages · saved on this device", 13f, muted)
         button(content, I18n.t(this,"Edit journal")) { journalForm(j.getString("id")) }
         button(content, I18n.t(this,"Add spread"), true) { spreadForm() }
-        button(content, I18n.t(this,"AI spread ideas")) { tools("ai") }
         val search = EditText(this).apply { setTextColor(ink); setHintTextColor(muted); hint = "Find a spread"; contentDescription = "Find a spread"; setSingleLine(); setText(query) }
         content.addView(search)
         val list = column(); content.addView(list)
@@ -280,9 +279,8 @@ class MainActivity : Activity() {
     private fun spreadForm(id: String? = null) {
         val existing = id?.let { key -> JournalData.spreads(journal()!!).find { it.getString("id") == key } }
         form("spread", if (id == null) "Add spread" else "Edit spread", id, build = { body ->
-            select(body,"layout","Template",listOf("Blank","Calendar with notes","Tracker","Log","Wishlist","AI-assisted / custom"),listOf("blank","calendar","tracker","log","wishlist","custom").indexOf(existing?.optJSONObject("layout")?.optString("kind") ?: "blank"))
+            select(body,"layout","Template",listOf("Blank","Calendar with notes","Tracker","Log","Wishlist","Custom"),listOf("blank","calendar","tracker","log","wishlist","custom").indexOf(existing?.optJSONObject("layout")?.optString("kind") ?: "blank"))
             input(body,"layoutNotes","Layout notes",existing?.optJSONObject("layout")?.optString("notes") ?: "",max=2000)
-            button(body,I18n.t(this,"Let AI help with this spread/page")) { val context="Help design a ${listOf("blank","calendar","tracker","log","wishlist","custom")[selected("layout")]} spread: ${value("title")}. ${value("layoutNotes")}";currentDialog?.dismiss();startActivity(Intent(this,CompanionActivity::class.java).putExtra("mode","ai").putExtra("profile",profileId).putExtra("journal",journalId).putExtra("context",context)) }
             input(body, "title", "Spread title", existing?.getString("title") ?: "")
             input(body, "start", "First page", existing?.getInt("start")?.toString() ?: "", true, 5)
             input(body, "end", "Last page", existing?.getInt("end")?.toString() ?: "", true, 5)

@@ -114,7 +114,6 @@ function renderJournal() {
   content.querySelector('#edit-journal').addEventListener('click', () => newJournal(journal));
   content.querySelector('#new-spread').addEventListener('click', () => newSpread());
   content.querySelector('input[type=search]').addEventListener('input', e => renderSpreads(e.target.value));
-  const aiButton = document.createElement('button'); aiButton.textContent = 'AI spread ideas'; aiButton.onclick = () => ai('spreads'); content.querySelector('.journal-actions').append(aiButton);
   renderSpreads('');
 }
 function renderSpreads(query) {
@@ -154,13 +153,12 @@ function newSpread(existing = null, preset = {}) {
   let first = 1;
   for (const s of [...journal.spreads].sort((a, b) => a.start - b.start)) { if (s.start > first) break; first = s.end + 1; }
   const suggestion = first <= journal.pages ? first : '';
-  showForm(existing ? 'Edit spread' : 'Give your pages a home', 'Add a name and the page numbers from your paper journal.', `<label>Template<select name="layoutKind" aria-label="Template"><option value="blank">Blank</option><option value="calendar">Calendar with notes</option><option value="tracker">Tracker</option><option value="log">Log</option><option value="wishlist">Wishlist</option><option value="custom">AI-assisted / custom</option></select></label><label>Layout notes<textarea name="layoutNotes" maxlength="2000"></textarea></label><button type="button" id="spread-ai-help">Let AI help with this spread/page</button><label>Spread title<input name="title" maxlength="120" required placeholder="e.g. Small things I’m grateful for"></label><div class="form-row"><label>First page<input name="start" type="number" min="1" max="${journal.pages}" step="1" value="${suggestion}" required></label><label>Last page<input name="end" type="number" min="1" max="${journal.pages}" step="1" value="${suggestion}" required></label></div><p class="field-help">For one page, use the same number twice. This journal has ${journal.pages} pages.</p>${formFooter(existing ? 'Save spread' : 'Add spread')}`, async input => {
+  showForm(existing ? 'Edit spread' : 'Give your pages a home', 'Add a name and the page numbers from your paper journal.', `<label>Template<select name="layoutKind" aria-label="Template"><option value="blank">Blank</option><option value="calendar">Calendar with notes</option><option value="tracker">Tracker</option><option value="log">Log</option><option value="wishlist">Wishlist</option><option value="custom">Custom</option></select></label><label>Layout notes<textarea name="layoutNotes" maxlength="2000"></textarea></label><label>Spread title<input name="title" maxlength="120" required placeholder="e.g. Small things I’m grateful for"></label><div class="form-row"><label>First page<input name="start" type="number" min="1" max="${journal.pages}" step="1" value="${suggestion}" required></label><label>Last page<input name="end" type="number" min="1" max="${journal.pages}" step="1" value="${suggestion}" required></label></div><p class="field-help">For one page, use the same number twice. This journal has ${journal.pages} pages.</p>${formFooter(existing ? 'Save spread' : 'Add spread')}`, async input => {
     await save(existing ? 'editSpread' : 'addSpread', { ...input, start: Number(input.start), end: Number(input.end), profileId, journalId, spreadId: existing?.id, layout: { kind: input.layoutKind, notes: input.layoutNotes } });
     dialog.close(); render(); headingFocus(); notify('Spread saved. A little easier to find now.');
   });
   dialog.querySelector('[name=layoutKind]').value = existing?.layout?.kind || preset.kind || 'blank';
   dialog.querySelector('[name=layoutNotes]').value = existing?.layout?.notes || preset.notes || '';
-  dialog.querySelector('#spread-ai-help').onclick = () => { const context = `Help design a ${dialog.querySelector('[name=layoutKind]').value} spread: ${dialog.querySelector('[name=title]').value}. ${dialog.querySelector('[name=layoutNotes]').value}`; dialog.close(); ai('spreads', null, context); };
   if (existing) {
     const form = dialog.querySelector('form');
     for (const field of ['title', 'start', 'end']) form.elements[field].value = existing[field];

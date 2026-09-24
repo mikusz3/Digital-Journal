@@ -7,4 +7,5 @@
 5. Publish the source tag, Linux archive, Windows ZIP and signed Android APK, with SHA-256 checksums and concrete verification/limitations in release notes. GitHub Actions test APKs use a disposable debug certificate and are not stable public updates.
 6. Never include private prompts, local app data, API keys, signing files, device identifiers or personal test screenshots. Stage source files explicitly and inspect the staged file list.
 
-Live AI acceptance requires a user-provided funded provider key. Fixture tests verify request formatting, errors, parsing and review-before-save; they do not prove current billing, model access or network success on a user's provider account.
+
+For 0.4.0 and later, verify upgrade removal of obsolete credential stores while preserving journals/preferences, and check that AI controls, provider transports and Android Internet permission remain absent.

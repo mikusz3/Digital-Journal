@@ -5,7 +5,6 @@ const os = require('node:os');
 const path = require('node:path');
 const { JournalStore } = require('../core/store.cjs');
 const { createBackup, parseBackup } = require('../core/backups.cjs');
-const { generate, parseSuggestions, request } = require('../core/ai.cjs');
 function store(t) { const dir=fs.mkdtempSync(path.join(os.tmpdir(),'journal-tasks-'));t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));return new JournalStore(dir); }
 test('legacy migration, tasks, profile isolation, persistence and copied identifiers', t => {
   const s=store(t);fs.writeFileSync(s.file,JSON.stringify({version:1,profiles:[{id:'legacy',name:'Legacy',journals:[]}]}));
@@ -20,26 +19,6 @@ test('legacy migration, tasks, profile isolation, persistence and copied identif
   const backup=parseBackup(createBackup(restored.read()));loaded.import(backup);
   const copy=loaded.read().profiles[2].tasks[0];assert.notEqual(copy.id,id);assert.notEqual(copy.subtasks[0].id,step);assert.equal(copy.subtasks[0].done,true);
   loaded.change('deleteTask',{profileId:'legacy',taskId:id});assert.equal(loaded.read().profiles[2].tasks.length,1);
-});
-test('AI supports both fixed HTTPS endpoints and rejects incomplete, malformed and oversized suggestions', async () => {
-  const input={provider:'openai',kind:'steps',model:'gpt-4.1-mini',context:'A small project'};
-  assert.equal(request(input).body.store,false);assert.throws(()=>request({...input,provider:'https://attacker.invalid'}));
-  const items=[{title:'Plan',detail:'Write a short outline.'}];
-  const data={status:'completed',output:[{content:[{type:'output_text',text:JSON.stringify({items})}]}]};
-  let sent;assert.deepEqual(await generate(input,'test-placeholder',undefined,async(url,options)=>{sent={url,options};return new Response(JSON.stringify(data));}),items);
-  assert.equal(sent.url,'https://api.openai.com/v1/responses');assert.equal(sent.options.redirect,'error');
-  assert.deepEqual(parseSuggestions('deepseek',{choices:[{finish_reason:'stop',message:{content:JSON.stringify({items})}}]}),items);
-  assert.throws(()=>parseSuggestions('openai',{...data,status:'incomplete'}));
-  assert.throws(()=>parseSuggestions('deepseek',{choices:[{finish_reason:'stop',message:{content:'not JSON'}}]}));
-  await assert.rejects(generate(input,'',undefined),/key/);
-  await assert.rejects(generate(input,'test',undefined,async()=>new Response('',{status:401})),/key/);
-});
-test('key vault refuses plaintext persistence and never returns credentials', t => {
-  const s=store(t);const { Preferences }=require('../desktop/preferences.cjs');
-  const p=new Preferences(path.dirname(s.file),{isEncryptionAvailable:()=>false});
-  assert.throws(()=>p.setKey({provider:'openai',key:'not-a-real-key',remember:true}),/Secure/);
-  p.setKey({provider:'openai',key:'not-a-real-key',remember:false});assert.equal(p.key('openai'),'not-a-real-key');assert.equal(JSON.stringify(p.read()).includes('not-a-real-key'),false);assert.equal(fs.readFileSync(p.vault,'utf8'),'{}');
-  p.setKey({provider:'openai',key:'',remember:false});assert.equal(p.key('openai'),'');
 });
 test('tomato timer bounds, pause, resume and expiry use deadlines',()=>{
   const {change,remaining}=require('../core/pomodoro.cjs');
@@ -58,42 +37,12 @@ test('all requested locales contain the same supported interface keys',()=>{
   const {languages,messages}=require('../core/locales.json');assert.deepEqual(Object.keys(languages).sort(),['en','pl','de','es','es-419','ja','ru','uk','fr'].sort());
   for(const code of Object.keys(languages)){assert.deepEqual(Object.keys(messages[code]).sort(),Object.keys(messages.en).sort());for(const value of Object.values(messages[code]))assert.ok(value.length);}
 });
-test('AI errors distinguish billing from rate limits without leaking provider echoes', async () => {
-  const {providerError}=require('../core/ai.cjs');
-  assert.match(providerError('deepseek',402),/credits/);
-  assert.match(providerError('openai',429,JSON.stringify({error:{type:'insufficient_quota',message:'secret-key-and-private-context'}})),/credits/);
-  assert.match(providerError('openai',429,'{}'),/Too many requests/);
-  assert.match(providerError('openai',404),/Model unavailable/);
-  assert.match(providerError('deepseek',503),/temporarily unavailable/);
-  assert.match(providerError('deepseek',420,'<html>secret-key</html>'),/HTTP 420/);
-  assert.doesNotMatch(providerError('openai',401,JSON.stringify({error:{message:'secret-key'}})),/secret-key/);
-  await assert.rejects(generate({provider:'deepseek',kind:'steps',context:'Plan'},'fake-key',undefined,async()=>new Response(JSON.stringify({error:{type:'insufficient_quota'}}),{status:429})),/credits/);
-});
-test('Gemini sends a header-only key, structured context and validates responses', async () => {
-  const {providerError}=require('../core/ai.cjs');
-  const items=[{title:'Weekly calendar',detail:'Leave a notes column.'}];
-  const reply={candidates:[{finishReason:'STOP',content:{parts:[{thought:true,text:'private reasoning'},{text:JSON.stringify({items})}]}}]};
-  for(const kind of ['steps','spreads']) {
-    let sent;
-    assert.deepEqual(await generate({provider:'gemini',kind,context:'My plan',language:'pl'},'gemini-test-key',undefined,async(url,options)=>{sent={url,options};return new Response(JSON.stringify(reply));}),items);
-    assert.equal(sent.url,'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent');
-    assert.equal(sent.options.headers['x-goog-api-key'],'gemini-test-key');assert.equal(sent.options.headers.Authorization,undefined);
-    assert.equal(sent.options.redirect,'error');assert.ok(!sent.url.includes('gemini-test-key'));
-    const body=JSON.parse(sent.options.body);assert.equal(body.contents[0].parts[0].text,'My plan');assert.equal(body.generationConfig.responseFormat.text.mimeType,'application/json');
-    assert.ok(!sent.options.body.includes('gemini-test-key'));
-  }
-  assert.throws(()=>parseSuggestions('gemini',{promptFeedback:{blockReason:'SAFETY'}}),/blocked/);
-  assert.throws(()=>parseSuggestions('gemini',{candidates:[{finishReason:'MAX_TOKENS'}]}),/incomplete/);
-  assert.throws(()=>parseSuggestions('gemini',{candidates:[{finishReason:'STOP',content:{parts:[{text:'not JSON'}]}}]}));
-  assert.match(providerError('gemini',429),/daily quota/);
-  assert.match(providerError('gemini',400,JSON.stringify({error:{details:[{reason:'API_KEY_INVALID'}]}})),/API key rejected/);
-  assert.throws(()=>request({provider:'gemini',kind:'steps',context:'test',model:'../../host?key=bad'}));
-});
-test('Gemini credentials are isolated, encrypted and removable',t=>{
-  const s=store(t);const {Preferences}=require('../desktop/preferences.cjs');
-  const safe={isEncryptionAvailable:()=>true,getSelectedStorageBackend:()=> 'gnome_libsecret',encryptString:s=>Buffer.from('encrypted:'+s),decryptString:b=>b.toString().slice(10)};
-  const p=new Preferences(path.dirname(s.file),safe);p.setKey({provider:'openai',key:'other-key',remember:false});p.setKey({provider:'gemini',key:'gemini-fixture',remember:true});
-  assert.equal(p.read().keys.gemini,true);assert.equal(p.key('gemini'),'gemini-fixture');assert.ok(!JSON.stringify(p.read()).includes('gemini-fixture'));
-  assert.ok(!fs.readFileSync(p.vault,'utf8').includes('gemini-fixture'));
-  p.setKey({provider:'gemini',key:'',remember:false});assert.equal(p.read().keys.gemini,false);assert.equal(p.key('openai'),'other-key');
+test('upgrade removes obsolete credentials without touching journals or appearance',t=>{
+  const s=store(t);const dir=path.dirname(s.file);const {Preferences}=require('../desktop/preferences.cjs');
+  const profile=s.change('createProfile',{name:'Keep me'});const before=fs.readFileSync(s.file,'utf8');
+  fs.writeFileSync(path.join(dir,'preferences.json'),JSON.stringify({theme:'Dark',language:'pl',timer:{minutes:5}}));
+  for(const name of ['credentials.json','credentials.json.tmp'])fs.writeFileSync(path.join(dir,name),'old encrypted or damaged key data');
+  const p=new Preferences(dir);assert.equal(p.read().theme,'Dark');assert.equal(p.read().language,'pl');assert.equal(p.read().timer.minutes,5);
+  for(const name of ['credentials.json','credentials.json.tmp'])assert.equal(fs.existsSync(path.join(dir,name)),false);
+  assert.equal(fs.readFileSync(s.file,'utf8'),before);assert.equal('keys' in p.read(),false);new Preferences(dir);
 });

@@ -19,7 +19,6 @@ import com.google.zxing.integration.android.IntentIntegrator
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import org.json.JSONObject
 import java.io.File
-import java.util.concurrent.Executors
 
 /** Optional tools live outside the journal index and never mutate it without review. */
 class CompanionActivity : Activity() {
@@ -32,19 +31,12 @@ class CompanionActivity : Activity() {
     private var editing: String? = null
     private var dialog: AlertDialog? = null
     private var draft: Bundle? = null
-    private var selectedProvider = "openai"
     private var selectedTheme = "Light"
-    private var request: AiClient? = null
-    private val worker = Executors.newSingleThreadExecutor()
     private var qrValue = ""
-    private var aiKind = "spreads"
     private var taskId: String? = null
     private val timerHandler=android.os.Handler(android.os.Looper.getMainLooper())
     private var timerAnnounced=false
-    private var suggestions: List<JSONObject> = emptyList()
-    private var checkedSuggestions = booleanArrayOf()
     private val pid get() = intent.getStringExtra("profile") ?: error("Choose a profile first.")
-    private val jid get() = intent.getStringExtra("journal") ?: error("Choose a journal first.")
     private fun profile(state: JSONObject = repository.read()) = JournalData.profile(state,pid)
     private fun dp(v: Int) = (v*resources.displayMetrics.density).toInt()
     override fun onCreate(saved: Bundle?) {
@@ -52,21 +44,18 @@ class CompanionActivity : Activity() {
         try { repository=JournalRepository(this); appearance=Appearance(this) } catch(e: Exception) { AlertDialog.Builder(this).setMessage(e.message).setPositiveButton(I18n.t(this@CompanionActivity,"Close")) { _,_->finish() }.show(); return }
         mode=saved?.getString("mode") ?: intent.getStringExtra("mode") ?: "settings"
         editing=saved?.getString("editing"); draft=saved?.getBundle("fields"); qrValue=saved?.getString("qr","") ?: ""
-        selectedProvider=saved?.getString("provider","openai") ?: "openai"; selectedTheme=saved?.getString("theme") ?: appearance.name
-        aiKind=saved?.getString("aiKind") ?: intent.getStringExtra("kind") ?: "spreads"; taskId=saved?.getString("taskId")
-        saved?.getString("suggestions")?.let { suggestions=JournalData.list(org.json.JSONArray(it)) }
-        checkedSuggestions=saved?.getBooleanArray("checked") ?: BooleanArray(suggestions.size)
+        selectedTheme=saved?.getString("theme") ?: appearance.name
+        taskId=saved?.getString("taskId")
         render()
         draft=saved?.getBundle("fields")
-        when(saved?.getString("form")) { "task" -> taskForm(editing); "spread" -> spreadForm(); "review" -> review() }
+        when(saved?.getString("form")) { "task" -> taskForm(editing) }
     }
     override fun onSaveInstanceState(out: Bundle) {
-        out.putString("mode",mode);out.putString("form",formKind);out.putString("editing",editing);out.putString("qr",qrValue);out.putString("provider",selectedProvider);out.putString("theme",selectedTheme);out.putString("aiKind",aiKind);out.putString("taskId",taskId)
-        out.putString("suggestions",org.json.JSONArray(suggestions).toString());out.putBooleanArray("checked",checkedSuggestions)
-        out.putBundle("fields",Bundle().apply { fields.filterKeys { it != "key" }.forEach { (k,v)->putString(k,v.text.toString()) } })
+        out.putString("mode",mode);out.putString("form",formKind);out.putString("editing",editing);out.putString("qr",qrValue);out.putString("theme",selectedTheme);out.putString("taskId",taskId)
+        out.putBundle("fields",Bundle().apply { fields.forEach { (k,v)->putString(k,v.text.toString()) } })
         super.onSaveInstanceState(out)
     }
-    override fun onDestroy() { request?.cancel(); worker.shutdownNow(); timerHandler.removeCallbacksAndMessages(null); super.onDestroy() }
+    override fun onDestroy() { timerHandler.removeCallbacksAndMessages(null); super.onDestroy() }
     private fun column()=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL }
     private fun text(parent: LinearLayout, value: String, size: Float=16f)=TextView(this).apply { text=value; textSize=size; setTextColor(appearance.color("text"));setPadding(0,dp(8),0,dp(8));parent.addView(this) }
     private fun button(parent: LinearLayout, label: String, action:()->Unit)=Button(this).apply { text=I18n.t(this@CompanionActivity,label);isAllCaps=false;minHeight=dp(48);setTextColor(appearance.color("text"));backgroundTintList=android.content.res.ColorStateList.valueOf(appearance.color("bar"));parent.addView(this);setOnClickListener { try { action() } catch(e: Exception) { problem(e) } } }
@@ -86,7 +75,7 @@ class CompanionActivity : Activity() {
         button(outer,I18n.t(this,"Back to journal")) { finish() };text(outer,I18n.t(this,title),25f)
         body=column();val scroll=ScrollView(this);scroll.addView(body);outer.addView(scroll,LinearLayout.LayoutParams(-1,0,1f));setContentView(outer);outer.requestApplyInsets()
     }
-    private fun render() { when(mode) { "timer"->timer();"tasks"->tasks();"ai"->ai();"qr"->qr();"about"->about();"keys"->keys();else->settings() }; draft=null }
+    private fun render() { when(mode) { "timer"->timer();"tasks"->tasks();"qr"->qr();"about"->about();else->settings() }; draft=null }
     private fun problem(e: Exception) { AlertDialog.Builder(this).setTitle(I18n.t(this@CompanionActivity,"Could not complete that action")).setMessage(e.message ?: "Please try again.").setPositiveButton(I18n.t(this@CompanionActivity,"OK"),null).show() }
     private fun toast(message:String)=Toast.makeText(this,I18n.t(this,message),Toast.LENGTH_LONG).show()
     private fun form(kind:String,title:String,build:(LinearLayout)->Unit,save:()->Unit) {
@@ -107,13 +96,12 @@ class CompanionActivity : Activity() {
             for(s in JournalData.list(t.getJSONArray("subtasks"))) CheckBox(this).apply {text=s.getString("title");setTextColor(appearance.color("text"));isChecked=s.getBoolean("done");body.addView(this);setOnCheckedChangeListener {_,checked -> try {repository.change {TaskData.toggle(profile(it),id,s.getString("id"))};if(checked)celebrate()} catch(e:Exception){problem(e)} }}
             button(body,I18n.t(this,"🍅 Focus timer")) {taskId=id;mode="timer";render()}
             button(body,I18n.t(this,"Edit task")) {editing=id;taskForm(id)}
-            button(body,I18n.t(this,"Suggest small steps")) {taskId=id;aiKind="steps";mode="ai";render()}
             button(body,I18n.t(this,"Delete task")) {AlertDialog.Builder(this).setTitle(I18n.t(this@CompanionActivity,"Delete task?")).setMessage(I18n.t(this@CompanionActivity,"Remove this task and its subtasks from this profile?")).setNegativeButton(I18n.t(this@CompanionActivity,"Cancel"),null).setPositiveButton(I18n.t(this@CompanionActivity,"Delete")) {_,_->try{repository.change {TaskData.delete(profile(it),id)};if(Pomodoro(this).read()?.optString("taskId")==id)Pomodoro(this).reset();render()}catch(e:Exception){problem(e)}}.show()}
         }
     }
-    private fun taskForm(id:String?, added:List<String> = emptyList()) {
+    private fun taskForm(id:String?) {
         val t=id?.let {key->TaskData.tasks(profile()).find {it.getString("id")==key}}
-        form("task",if(t==null)"Add task" else "Edit task",{p->input(p,"title","Task title",t?.getString("title") ?: "");input(p,"due","Planned date (YYYY-MM-DD, optional)",t?.getString("due") ?: "");input(p,"notes","Notes",t?.getString("notes") ?: "",true,4000);input(p,"steps","Subtasks (one per line)",((t?.let {JournalData.list(it.getJSONArray("subtasks")).map {s->s.getString("title")}} ?: emptyList())+added).joinToString("\n"),true,12100)}, {repository.change {TaskData.save(profile(it),id,value("title"),value("notes"),value("due"),value("steps").lines())};mode="tasks"})
+        form("task",if(t==null)"Add task" else "Edit task",{p->input(p,"title","Task title",t?.getString("title") ?: "");input(p,"due","Planned date (YYYY-MM-DD, optional)",t?.getString("due") ?: "");input(p,"notes","Notes",t?.getString("notes") ?: "",true,4000);input(p,"steps","Subtasks (one per line)",((t?.let {JournalData.list(it.getJSONArray("subtasks")).map {s->s.getString("title")}} ?: emptyList())).joinToString("\n"),true,12100)}, {repository.change {TaskData.save(profile(it),id,value("title"),value("notes"),value("due"),value("steps").lines())};mode="tasks"})
     }
     private fun celebrate() {
         toast("Done. A small step forward!")
@@ -122,7 +110,7 @@ class CompanionActivity : Activity() {
         for(i in 0..19){val piece=View(this).apply {setBackgroundColor(intArrayOf(0xffdfb44c.toInt(),0xff4faa83.toInt(),0xff818cff.toInt())[i%3]);layoutParams=FrameLayout.LayoutParams(dp(7),dp(12));translationX=(resources.displayMetrics.widthPixels*Math.random()).toFloat();translationY=dp(80).toFloat()};overlay.addView(piece);piece.animate().translationY(resources.displayMetrics.heightPixels*.8f).rotation(450f).alpha(0f).setDuration(1200).start()};overlay.postDelayed({decor.removeView(overlay)},1300)
     }
     private fun settings() {
-        root("Appearance & AI")
+        root("Settings")
         val languages=I18n.languages(this);val codes=languages.keys().asSequence().toList();var language=I18n.language(this)
         select(body,"Language",codes.map {languages.getString(it)},languages.getString(language)){label->language=codes.first {languages.getString(it)==label}}
         button(body,I18n.t(this,"Save language")) {I18n.save(this,language);render()}
@@ -134,46 +122,7 @@ class CompanionActivity : Activity() {
         button(body,I18n.t(this,"Save appearance")) {appearance.save(selectedTheme,listOf("background","surface","text","accent","bar").associateWith {value(it)},value("gradient"),value("dim").toIntOrNull() ?: error("Enter dimming from 0 to 90."),motion.isChecked);render();toast("Appearance saved.")}
         button(body,I18n.t(this,"Choose wallpaper")) {startActivityForResult(Intent(Intent.ACTION_OPEN_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE).setType("image/*"),21)}
         button(body,I18n.t(this,"Remove wallpaper")) {File(filesDir,"wallpaper.jpg").delete();render()}
-        button(body,I18n.t(this,"AI provider keys")) {mode="keys";render()}
     }
-    private fun keys() {
-        root("AI provider keys");text(body,I18n.t(this,"Your account may incur API charges. Keys are encrypted with Android Keystore and excluded from journal backups."))
-        text(body,I18n.t(this,"Gemini: create a key at aistudio.google.com. Check your project’s free quota, pricing and data terms before sending personal notes."),13f)
-        val vault=KeyVault(this);val status=text(body,I18n.t(this,""))
-        select(body,"Provider",listOf("openai","deepseek","gemini"),selectedProvider){selectedProvider=it;status.text=if(vault.has(it))"A key is configured." else "No key configured."}
-        input(body,"key","New API key",max=512).apply {inputType=InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD;isSaveEnabled=false;setAutofillHints(View.AUTOFILL_HINT_PASSWORD)}
-        button(body,I18n.t(this,"Save key securely")) {val key=value("key");require(key.isNotEmpty()){ "Enter an API key." };vault.save(selectedProvider,key);fields["key"]?.setText("");toast("Key saved.");render()}
-        button(body,I18n.t(this,"Remove selected provider key")) {vault.save(selectedProvider,"");render()}
-        button(body,I18n.t(this,"Back to settings")) {mode="settings";render()}
-    }
-    private fun ai() {
-        root(if(aiKind=="steps")"AI task breakdown" else "AI spread ideas")
-        text(body,I18n.t(this,"Only the text below is sent when you press Generate. Your selected provider may charge your account. Suggestions need your review before saving."))
-        select(body,"Provider",listOf("openai","deepseek","gemini"),selectedProvider){ if(it!=selectedProvider){selectedProvider=it;fields["model"]?.setText(AiClient.defaultModel(it))} }
-        input(body,"model","Model",AiClient.defaultModel(selectedProvider),max=100)
-        val initial=if(aiKind=="steps") TaskData.tasks(profile()).find {it.getString("id")==taskId}?.let {it.getString("title")+"\n"+it.getString("notes")} ?: "" else intent.getStringExtra("context") ?: "Suggest paper journal spreads. My interests: "
-        input(body,"context","Text to send",initial,true,6000)
-        val status=text(body,I18n.t(this,""))
-        val generate=button(body,I18n.t(this,"Generate")) {}
-        generate.setOnClickListener {
-            if(request!=null)return@setOnClickListener
-            try {
-                val provider=selectedProvider;val key=KeyVault(this).read(provider);val model=value("model");val context=value("context");val client=AiClient();request=client;generate.isEnabled=false;status.text="Waiting for suggestions…"
-                worker.execute {try {val result=client.generate(provider,model,aiKind,context,key,I18n.languages(this).getString(I18n.language(this)));runOnUiThread {if(!isDestroyed && request===client){request=null;generate.isEnabled=true;status.text="";suggestions=result;checkedSuggestions=BooleanArray(result.size){it==0};review()}}} catch(e:Exception){runOnUiThread {if(!isDestroyed && request===client){request=null;generate.isEnabled=true;status.text=I18n.t(this,e.message ?: "Could not complete that action") ?: "Provider request failed. Nothing was changed."}}} }
-            }catch(e:Exception){status.text=I18n.t(this,e.message ?: "Could not complete that action")}
-        }
-        button(body,I18n.t(this,"Cancel request")) {request?.cancel();request=null;generate.isEnabled=true;status.text="Canceled. Nothing was changed."}
-    }
-    private fun review() {
-        formKind="review"
-        val builder=AlertDialog.Builder(this).setTitle(I18n.t(this@CompanionActivity,"Review suggestions")).setNegativeButton(I18n.t(this@CompanionActivity,"Cancel"),null)
-        val labels=suggestions.map {it.getString("title")+"\n"+it.getString("detail")}.toTypedArray()
-        if(aiKind=="steps")builder.setMultiChoiceItems(labels,checkedSuggestions){_,i,checked->checkedSuggestions[i]=checked}
-        else builder.setSingleChoiceItems(labels,checkedSuggestions.indexOfFirst {it}){_,i->checkedSuggestions=BooleanArray(labels.size){it==i}}
-        val d=builder.setPositiveButton(I18n.t(this@CompanionActivity,"Use selected"),null).create();dialog=d
-        d.setOnDismissListener {formKind="";dialog=null};d.setOnShowListener {d.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener { val selected=suggestions.filterIndexed {i,_->checkedSuggestions[i]};if(selected.isEmpty()){toast("Select a suggestion.");return@setOnClickListener};d.dismiss();if(aiKind=="steps"){editing=taskId;taskForm(taskId,selected.map {it.getString("title")})}else {draft=Bundle().apply {putString("title",selected.first().getString("title"));putString("layoutNotes",selected.first().getString("detail"))};spreadForm()} }};d.show()
-    }
-    private fun spreadForm() {form("spread","Choose pages for this idea",{p->input(p,"title","Spread title");input(p,"layoutNotes","Layout notes",multiline=true,max=2000);input(p,"start","First page");input(p,"end","Last page")},{repository.change {JournalData.saveSpread(it,pid,jid,null,value("title"),value("start").toIntOrNull() ?: error("Enter first page."),value("end").toIntOrNull() ?: error("Enter last page."),JSONObject().put("kind","custom").put("notes",value("layoutNotes")))};toast("Spread saved.")})}
     private fun timer() {
         timerHandler.removeCallbacksAndMessages(null)
         root("🍅 Tomato focus timer")
@@ -217,7 +166,7 @@ class CompanionActivity : Activity() {
         root("About Digital Journal")
         text(body,I18n.t(this,"Digital Journal is an independent, fan-made application developed for personal use and offered without profit. The Bullet Journal method was created by Ryder Carroll. Bullet Journal® and BuJo® are trademarks of Lightcage, LLC. This project is not affiliated with, sponsored by, or endorsed by Ryder Carroll or Lightcage, LLC."))
         button(body,I18n.t(this,"Original method: bulletjournal.com")) {startActivity(Intent(Intent.ACTION_VIEW,Uri.parse("https://bulletjournal.com")))}
-        text(body,I18n.t(this,"Version 0.3.2 · Source: github.com/mikusz3/Digital-Journal. Themes are original visual interpretations; no third-party artwork is bundled. QR support uses ZXing and JourneyApps (Apache-2.0)."))
+        text(body,I18n.t(this,"Version 0.4.0 · Source: github.com/mikusz3/Digital-Journal. Themes are original visual interpretations; no third-party artwork is bundled. QR support uses ZXing and JourneyApps (Apache-2.0)."))
         button(body,I18n.t(this,"Open-source licenses")) { val content=TextView(this).apply {text=assets.open("notices.txt").bufferedReader().use {it.readText()};setPadding(dp(16),dp(16),dp(16),dp(16))};AlertDialog.Builder(this).setTitle(I18n.t(this@CompanionActivity,"Open-source licenses")).setView(ScrollView(this).apply {addView(content)}).setPositiveButton(I18n.t(this@CompanionActivity,"Close"),null).show() }
         text(body,I18n.t(this,"Compatibility investigations"),22f);text(body,I18n.t(this,"Cover to Cover Club and Xiaomi Home can be opened below when installed. No reading data is imported and no printer connection is claimed. Collection and printing features are planned for later."))
         for((label,pkg) in listOf("Cover to Cover Club" to "com.quillguild.covertocoverclub","Xiaomi Home" to "com.xiaomi.smarthome")) button(body,"Open $label") {val launch=packageManager.getLaunchIntentForPackage(pkg) ?: error("$label is not installed on this device.");startActivity(launch)}

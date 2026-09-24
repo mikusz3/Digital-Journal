@@ -1,6 +1,6 @@
 const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('bujo', {
-  ...Object.fromEntries(['timer','saveTask','toggleTask','deleteTask','preferences','savePreferences','setKey','generateAI','cancelAI','wallpaper'].map(action => [action, input => ipcRenderer.invoke('bujo', action, input)])),
+  ...Object.fromEntries(['timer','saveTask','toggleTask','deleteTask','preferences','savePreferences','wallpaper'].map(action => [action, input => ipcRenderer.invoke('bujo', action, input)])),
   read: () => ipcRenderer.invoke('bujo', 'read'),
   createProfile: input => ipcRenderer.invoke('bujo', 'createProfile', input),
   deleteProfile: input => ipcRenderer.invoke('bujo', 'deleteProfile', input),

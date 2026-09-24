@@ -1,10 +1,10 @@
 # Digital Journal — incremental delivery
 
-Tasks 1–3, 5–7, 9–10 and the supported part of 12 are implemented. Task 13 is covered by cross-platform build/test workflows and release packaging. Additional requested features are spread layouts, a 5–30 minute tomato timer and nine interface languages. See release notes for actual device coverage and live AI limitations. Tasks 4, 8, 11 and 14 are deferred.
+Tasks 1–3, 5, 9–10 and the supported part of 12 are implemented. Task 13 is covered by cross-platform build/test workflows and release packaging. Additional requested features are spread layouts, a 5–30 minute tomato timer and nine interface languages. See release notes for actual device coverage . Tasks 4, 8, 11 and 14 are deferred.
 
 ## Product intent
 
-A shame-free, local companion to physical Bullet Journals, not a replacement for writing in them. Target Android (the user's Moto G54 5G), Linux Mint, and Windows. No online login; local profiles own separate journals. AI is optional and uses a provider key supplied by the user.
+A shame-free, local companion to physical Bullet Journals, not a replacement for writing in them. Target Android (the user's Moto G54 5G), Linux Mint, and Windows. No online login; local profiles own separate journals. AI features were permanently removed at the user’s request in 0.4.0; manual creativity and planning are the product direction.
 
 Requirements were derived from a private product brief. The private brief is not distributed with source code.
 
@@ -19,8 +19,8 @@ Each task ends with a runnable result and a short handoff. Selected tasks may be
 | 3 | Android foundation | Same profile/journal workflow in an Android app; build APK and separately test on the Moto G54 when available. |
 | 4 | Journal images | Optional profile picture and spread scans, with persistent local copies and graceful handling of missing files. |
 | 5 | Tasks and planning | Add tasks, optionally split into smaller tasks, complete/reopen them; show optional confetti with reduced-motion support. No overdue shaming or streak punishment. |
-| 6 | AI spread suggestions | User configures OpenAI or DeepSeek; intentionally send selected context; handle missing key, offline state and provider errors. |
-| 7 | AI planning assistance | Suggest task breakdowns which the user can review before adding. Keep manual planning usable without AI. |
+| 6 | AI spread suggestions — retired | Removed in 0.4.0; use manual templates and custom layout notes. |
+| 7 | AI planning assistance — retired | Removed in 0.4.0; write and edit task subtasks manually. |
 | 8 | Collection shelf | Add owned items, categories, title and optional release date; sort ascending/descending and preserve unknown dates. |
 | 9 | Android QR tools | Generate QR codes for links and scan via camera; handle permission denial and let the user confirm opening a decoded link. |
 | 10 | Themes | Dark, Light, Matrix, XP Luna inspired, Frutiger Aero inspired, Win9x inspired, Discord inspired, and custom colors/gradients; image wallpaper with adjustable dimming. |

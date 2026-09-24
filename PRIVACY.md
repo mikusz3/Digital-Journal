@@ -1,19 +1,11 @@
 # Privacy
 
-Profiles, journals and tasks are stored on your device. There is no project-operated server, telemetry, advertising or automatic cloud synchronization. The application does not provide password-protected profiles.
+Digital Journal 0.4.0 is a local journal companion with no AI services, provider accounts, API calls, telemetry, advertising or automatic cloud synchronization. Profiles are not password-protected accounts.
 
-Backups are user-selected, plain-text JSON files. Export includes every profile, journal, spread and task. API credentials, settings and wallpapers are never exported. Imports create separate copies. Deleting a profile removes its locally stored content, but cannot delete backup files you exported elsewhere.
+Profiles, journals, custom layout notes and tasks stay on your device. Backups are plain-text JSON files containing every local profile, journal, spread and task. Settings and wallpapers are excluded. Imports create separate copies. Deleting a profile does not remove exported backups elsewhere.
 
-Optional AI sends exactly the context shown in the form to the selected OpenAI, DeepSeek or Google Gemini API, along with your chosen model and a request for journal suggestions. It sends your API key only to that provider as an HTTPS authentication header. Keys are never written to application logs. Provider handling and billing are governed by their own policies:
+Upgrading deletes the application's old provider credential file and temporary file on desktop, and its old provider preferences plus dedicated encryption alias on Android. Cleanup does not read or decrypt credentials. Already saved journal content is preserved. Local removal does not revoke keys at provider accounts or delete information previously sent using older versions.
 
-- [OpenAI API data controls](https://developers.openai.com/api/docs/guides/your-data)
-- [Google Gemini API terms and data handling](https://ai.google.dev/gemini-api/terms)
-- [DeepSeek privacy policy](https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy.html)
+Android no longer requests Internet permission. Its camera is used only by the offline QR scanner. A decoded web link opens in an external browser only after confirmation; the About screen can open explicitly selected websites or installed apps. Those external apps have their own privacy policies.
 
-OpenAI requests disable response storage (`store: false`). This does not promise zero retention by the provider. AI suggestions are never applied without your review.
-
-Android camera access is used by the offline QR scanner. Camera images are not sent to AI or project servers. A decoded web link opens externally only after confirmation. Other apps and websites have their own privacy policies.
-
-Credentials are encrypted using Android Keystore or the desktop OS secret store. On desktop systems without a suitable secure store, credentials can be retained in memory for the current session only. Android OS backup and device-transfer backup are disabled for the app; use the explicit JSON backup feature.
-
-Gemini authentication uses the `x-goog-api-key` header, never a URL query parameter. Its unpaid-service data handling can include product improvement and human review; regional exceptions apply, including EEA/UK/Switzerland. Consult the linked Google terms before sending personal notes. The app does not automatically enable paid service or send the rest of your journal.
+Android OS backup and device-transfer backup remain disabled; use explicit JSON export/import. Keep exported files somewhere you trust.

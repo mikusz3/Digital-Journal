@@ -23,4 +23,4 @@ Without signing variables Gradle produces an unsigned release APK; do not publis
 
 The first public release certificate differs from early debug builds. Android cannot replace a differently signed installation. Export and verify a backup before any user-directed switch; never clear data to work around signing errors.
 
-Optional AI uses HTTPS directly to the chosen provider. Credentials use Android Keystore AES-GCM. The camera is used only by the QR scanner. No storage permission is needed; imports, exports and wallpapers use Android's document picker.
+AI and provider settings were removed in 0.4.0. The app has no Internet permission. Upgrade cleanup removes obsolete provider preferences and their Android Keystore alias. The camera is used only by the QR scanner. No storage permission is needed; imports, exports and wallpapers use Android's document picker.

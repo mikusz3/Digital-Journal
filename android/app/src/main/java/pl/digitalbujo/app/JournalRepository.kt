@@ -6,6 +6,7 @@ import org.json.JSONObject
 import java.io.File
 
 class JournalRepository(context: Context) {
+    init { LegacyCredentials.remove(context) }
     private val file = AtomicFile(File(context.filesDir, "journals.json"))
     private var state: JSONObject = try {
         JournalData.validate(JSONObject(file.openRead().bufferedReader(Charsets.UTF_8).use { it.readText() }))
