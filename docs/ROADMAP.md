@@ -43,7 +43,7 @@ Each task ends with a runnable result and a short handoff. Selected tasks may be
 
 ## Architecture decisions
 
-The source lists C++, Pascal, Kotlin, JavaScript/TypeScript, Rust and Electron without selecting a mandatory combination. Selected: Electron/JavaScript desktop and Kotlin native Android with platform Views for the foundation. Both use version-1 journal JSON and a shared backup contract. Android builds its starter assets from the desktop source. Do not introduce every listed language.
+The source lists C++, Pascal, Kotlin, JavaScript/TypeScript, Rust and Electron without selecting a mandatory combination. Selected: Electron/JavaScript desktop and Kotlin native Android with platform Views for the foundation. Both use version-2 journal JSON (with version-1 migration) and a shared backup contract. Android builds its starter assets from the desktop source. Do not introduce every listed language.
 
 Keep profile/journal data separate from UI and platform services. Use stable IDs and a versioned storage format so later tasks can add attachments, tasks and collections without resetting data. Keep API credentials out of ordinary journal exports and logs.
 
@@ -61,3 +61,7 @@ Desktop and Android are separate deliverables. A browser preview is not a Window
 ## Verification and usage discipline
 
 Read this roadmap and the release notes before later work. Inspect only the current task's files. Run focused checks and keep successful output concise. Update the status record after each task. Do not claim Windows, phone, printer or external-app compatibility based solely on a local build.
+
+## Future Apple platforms
+
+See [the macOS and iOS roadmap](APPLE_ROADMAP.md). These are planned platforms, not current release targets. The iPhone XR is the intended first iOS device; macOS requires CI and eventual interactive validation without assuming Mac ownership.

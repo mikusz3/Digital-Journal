@@ -69,3 +69,7 @@ Both apps store profiles locally. Profiles separate content, not OS users or pas
 The display name changed from Digital BuJo to Digital Journal. Desktop deliberately retains the legacy `Digital BuJo` application-data folder, and Android retains `pl.digitalbujo.app`, so existing installations can find their journals. Version 1 journals and backups migrate to version 2. Version 2 backups are not intended for older app versions. Details: [BACKUP_FORMAT.md](docs/BACKUP_FORMAT.md).
 
 Private development prompts, device screenshots, signing keys, API keys and personal journal data are not part of this repository.
+
+### Planned Apple platforms
+
+The [macOS and iOS roadmap](docs/APPLE_ROADMAP.md) covers reuse of the desktop app, an iPhone XR-compatible companion, signing, and testing without an owned Mac. Apple builds are not included in this release.
